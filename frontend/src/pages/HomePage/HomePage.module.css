@@ -1,0 +1,97 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.hero {
+  margin-bottom: var(--space-10);
+}
+
+.title {
+  font-family: 'Montserrat', var(--font-body);
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #4a90d9 50%, var(--color-rain) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.searchWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-6);
+}
+
+.hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+.popularSection {
+  margin-top: var(--space-12);
+  width: 100%;
+  max-width: 600px;
+}
+
+.footer {
+  padding: var(--space-6);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+.footerNav {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+.footer a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--color-primary);
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3.5rem;
+  }
+
+  .subtitle {
+    font-size: var(--text-xl);
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 4rem;
+  }
+}

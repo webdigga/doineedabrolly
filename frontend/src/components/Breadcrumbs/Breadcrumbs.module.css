@@ -1,0 +1,37 @@
+.nav {
+  margin-bottom: var(--space-4);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--text-sm);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.separator {
+  margin: 0 var(--space-2);
+  color: var(--color-text-tertiary);
+}
+
+.link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.current {
+  color: var(--color-text-tertiary);
+}
