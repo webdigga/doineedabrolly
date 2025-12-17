@@ -4,13 +4,20 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-export function jsonResponse(data: unknown, status = 200): Response {
+export function jsonResponse(data: unknown, status = 200, cacheTtl = 0): Response {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...CORS_HEADERS,
+  };
+
+  // Add edge caching for successful responses
+  if (status === 200 && cacheTtl > 0) {
+    headers['Cache-Control'] = `public, max-age=${cacheTtl}, s-maxage=${cacheTtl}`;
+  }
+
   return new Response(JSON.stringify(data), {
     status,
-    headers: {
-      'Content-Type': 'application/json',
-      ...CORS_HEADERS,
-    },
+    headers,
   });
 }
 

@@ -2,6 +2,9 @@ import { jsonResponse, errorResponse } from '../../_shared/response';
 import { ukLocations } from '../../_shared/ukLocations';
 import type { SearchResponse } from '../../_shared/types';
 
+// Cache location searches for 1 hour (static data)
+const EDGE_CACHE_TTL = 60 * 60;
+
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const query = url.searchParams.get('q')?.toLowerCase().trim() || '';
@@ -24,5 +27,5 @@ export const onRequestGet: PagesFunction = async (context) => {
     total: results.length,
   };
 
-  return jsonResponse(response);
+  return jsonResponse(response, 200, EDGE_CACHE_TTL);
 };

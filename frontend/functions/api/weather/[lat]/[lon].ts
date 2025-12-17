@@ -3,6 +3,9 @@ import { getWeather } from '../../../_shared/weatherService';
 import { generateSummary } from '../../../_shared/plainEnglish';
 import type { WeatherResponse } from '../../../_shared/types';
 
+// Cache weather responses at edge for 30 minutes
+const EDGE_CACHE_TTL = 30 * 60;
+
 interface Params {
   lat: string;
   lon: string;
@@ -48,7 +51,8 @@ export const onRequestGet: PagesFunction<unknown, 'lat' | 'lon'> = async (contex
       summary,
     };
 
-    return jsonResponse(response);
+    // Cache at Cloudflare edge for 30 minutes
+    return jsonResponse(response, 200, EDGE_CACHE_TTL);
   } catch (error) {
     console.error('Weather API error:', error);
     const message = error instanceof Error ? error.message : 'Failed to fetch weather data';

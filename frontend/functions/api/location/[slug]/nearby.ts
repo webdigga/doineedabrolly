@@ -1,6 +1,9 @@
 import { jsonResponse, errorResponse } from '../../../_shared/response';
 import { ukLocations, locationsBySlug } from '../../../_shared/ukLocations';
 
+// Cache nearby lookups for 24 hours (static data)
+const EDGE_CACHE_TTL = 24 * 60 * 60;
+
 /**
  * Calculate distance between two points using Haversine formula
  * Returns distance in kilometers
@@ -42,5 +45,5 @@ export const onRequestGet: PagesFunction<unknown, 'slug'> = async (context) => {
     .slice(0, limit)
     .map(({ distance, ...loc }) => loc);
 
-  return jsonResponse({ results: nearby });
+  return jsonResponse({ results: nearby }, 200, EDGE_CACHE_TTL);
 };
