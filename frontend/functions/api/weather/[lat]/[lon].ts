@@ -6,14 +6,23 @@ import type { WeatherResponse } from '../../../_shared/types';
 // Cache weather responses at edge for 30 minutes
 const EDGE_CACHE_TTL = 30 * 60;
 
+interface Env {
+  WEATHER_API_KEY: string;
+}
+
 interface Params {
   lat: string;
   lon: string;
 }
 
-export const onRequestGet: PagesFunction<unknown, 'lat' | 'lon'> = async (context) => {
+export const onRequestGet: PagesFunction<Env, 'lat' | 'lon'> = async (context) => {
   const { lat, lon } = context.params as Params;
   const url = new URL(context.request.url);
+  const apiKey = context.env.WEATHER_API_KEY;
+
+  if (!apiKey) {
+    return errorResponse('Weather API key not configured', 500);
+  }
 
   // Parse coordinates
   const latitude = parseFloat(lat);
@@ -43,7 +52,7 @@ export const onRequestGet: PagesFunction<unknown, 'lat' | 'lon'> = async (contex
   }
 
   try {
-    const forecast = await getWeather(latitude, longitude, days);
+    const forecast = await getWeather(latitude, longitude, days, apiKey);
     const summary = generateSummary(forecast);
 
     const response: WeatherResponse = {
