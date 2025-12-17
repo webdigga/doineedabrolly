@@ -1,6 +1,6 @@
-import { getForecast as getOpenMeteoForecast } from './providers/openMeteo';
-import { getCachedWeather, setCachedWeather, getWeatherCacheKey, WEATHER_CACHE_TTL } from '../utils/cache';
-import type { Forecast } from '../types';
+import { getForecast as getOpenMeteoForecast } from './openMeteo';
+import { getCachedWeather, setCachedWeather, getWeatherCacheKey, WEATHER_CACHE_TTL } from './cache';
+import type { Forecast } from './types';
 
 /**
  * Get weather forecast for given coordinates.

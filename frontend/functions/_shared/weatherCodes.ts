@@ -60,13 +60,6 @@ export function isSnowyCode(code: number): boolean {
 }
 
 /**
- * Check if a weather code indicates precipitation (rain or snow)
- */
-export function isPrecipitationCode(code: number): boolean {
-  return isRainyCode(code) || isSnowyCode(code);
-}
-
-/**
  * Check if conditions are generally "nice" (clear/partly cloudy, no precip)
  */
 export function isNiceCode(code: number): boolean {

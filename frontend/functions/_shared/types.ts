@@ -42,11 +42,6 @@ export interface Forecast {
   daily: ForecastDay[];
 }
 
-export interface WeatherProvider {
-  getCurrentWeather(lat: number, lon: number): Promise<CurrentWeather>;
-  getForecast(lat: number, lon: number, days: number): Promise<Forecast>;
-}
-
 export interface PlainEnglishSummary {
   headline: string;
   today: string;
@@ -57,4 +52,27 @@ export interface PlainEnglishSummary {
 
 export interface WeatherResponse extends Forecast {
   summary: PlainEnglishSummary;
+}
+
+export interface Location {
+  slug: string;
+  name: string;
+  county: string;
+  countySlug: string;
+  lat: number;
+  lon: number;
+}
+
+export interface LocationResponse {
+  slug: string;
+  name: string;
+  county: string;
+  countySlug: string;
+  lat: number;
+  lon: number;
+}
+
+export interface SearchResponse {
+  results: LocationResponse[];
+  total: number;
 }

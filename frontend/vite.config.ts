@@ -4,6 +4,8 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  // Wrangler proxies to Vite, so suppress the misleading localhost:5173 message
+  logLevel: 'warn',
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -14,14 +16,6 @@ export default defineConfig({
       '@utils': resolve(__dirname, './src/utils'),
       '@types': resolve(__dirname, './src/types'),
       '@styles': resolve(__dirname, './src/styles'),
-    },
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8787',
-        changeOrigin: true,
-      },
     },
   },
 });

@@ -1,4 +1,4 @@
-import type { Forecast, ForecastDay, HourlyForecast, PlainEnglishSummary } from '../types';
+import type { Forecast, ForecastDay, HourlyForecast, PlainEnglishSummary } from './types';
 import { isRainyCode, isSnowyCode, isNiceCode, getWeatherDescription } from './weatherCodes';
 
 // Time period helpers

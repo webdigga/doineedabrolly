@@ -1,37 +1,16 @@
-import { getWeather } from '../services/weatherService';
-import { generateSummary } from '../utils/plainEnglish';
-import type { WeatherResponse } from '../types';
+import { jsonResponse, errorResponse } from '../../../_shared/response';
+import { getWeather } from '../../../_shared/weatherService';
+import { generateSummary } from '../../../_shared/plainEnglish';
+import type { WeatherResponse } from '../../../_shared/types';
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
-
-function jsonResponse(data: unknown, status = 200): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-      ...CORS_HEADERS,
-    },
-  });
+interface Params {
+  lat: string;
+  lon: string;
 }
 
-function errorResponse(message: string, status = 400): Response {
-  return jsonResponse({ error: message }, status);
-}
-
-/**
- * GET /api/weather/:lat/:lon?days=7
- * Get weather forecast for coordinates
- */
-export async function handleWeatherRequest(
-  lat: string,
-  lon: string,
-  request: Request
-): Promise<Response> {
-  const url = new URL(request.url);
+export const onRequestGet: PagesFunction<unknown, 'lat' | 'lon'> = async (context) => {
+  const { lat, lon } = context.params as Params;
+  const url = new URL(context.request.url);
 
   // Parse coordinates
   const latitude = parseFloat(lat);
@@ -75,4 +54,4 @@ export async function handleWeatherRequest(
     const message = error instanceof Error ? error.message : 'Failed to fetch weather data';
     return errorResponse(message, 500);
   }
-}
+};

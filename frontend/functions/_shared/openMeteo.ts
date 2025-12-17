@@ -1,4 +1,4 @@
-import type { Forecast, CurrentWeather, ForecastDay, HourlyForecast } from '../../types';
+import type { Forecast, CurrentWeather, ForecastDay, HourlyForecast } from './types';
 
 const OPEN_METEO_BASE = 'https://api.open-meteo.com/v1/forecast';
 
