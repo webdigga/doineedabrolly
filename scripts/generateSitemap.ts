@@ -20,8 +20,8 @@ interface Location {
 async function generateSitemap() {
   console.log('Loading locations data...');
 
-  // Import locations from worker
-  const locationsPath = path.join(__dirname, '../worker/src/data/ukLocations.ts');
+  // Import locations from functions
+  const locationsPath = path.join(__dirname, '../frontend/functions/_shared/ukLocations.ts');
   const locationsContent = fs.readFileSync(locationsPath, 'utf-8');
 
   // Extract the array from the file
