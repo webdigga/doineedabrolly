@@ -33,6 +33,10 @@
   margin: 0;
 }
 
+.attribution + .attribution {
+  margin-top: var(--space-4);
+}
+
 .attribution a {
   color: var(--color-text-secondary);
 }

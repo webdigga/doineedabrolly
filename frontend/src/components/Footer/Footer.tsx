@@ -16,6 +16,12 @@ export function Footer() {
             WeatherAPI.com
           </a>
         </p>
+        <p className={styles.attribution}>
+          Built by{' '}
+          <a href="https://kabooly.com" target="_blank" rel="noopener noreferrer">
+            Kabooly
+          </a>
+        </p>
       </div>
     </footer>
   );
