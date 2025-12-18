@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { KaboolyBanner } from '../KaboolyBanner/KaboolyBanner';
 import { SearchBox } from '../SearchBox/SearchBox';
+import { Footer } from '../Footer/Footer';
 import styles from './Layout.module.css';
 
 interface LayoutProps {
@@ -28,21 +29,7 @@ export function Layout({ children, showSearch = true }: LayoutProps) {
         {children}
       </main>
 
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <nav className={styles.footerNav}>
-            <Link to="/about">About</Link>
-            <Link to="/privacy">Privacy</Link>
-            <Link to="/terms">Terms</Link>
-          </nav>
-          <p className={styles.attribution}>
-            Weather data from{' '}
-            <a href="https://www.weatherapi.com" target="_blank" rel="noopener noreferrer">
-              WeatherAPI.com
-            </a>
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -62,12 +62,6 @@ export function AboutPage() {
           Location data comes from Ordnance Survey's Open Names dataset.
         </p>
 
-        <h2>Get in touch</h2>
-
-        <p>
-          Questions or feedback? We'd love to hear from you. Drop us a line at{' '}
-          <a href="mailto:hello@doineedabrolly.co.uk">hello@doineedabrolly.co.uk</a>
-        </p>
       </article>
     </Layout>
   );

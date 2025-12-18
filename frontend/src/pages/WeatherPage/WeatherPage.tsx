@@ -10,6 +10,7 @@ import { WeatherFAQ } from '../../components/WeatherFAQ/WeatherFAQ';
 import { WeatherBreadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs';
 import { SearchBox } from '../../components/SearchBox/SearchBox';
 import { KaboolyBanner } from '../../components/KaboolyBanner/KaboolyBanner';
+import { Footer } from '../../components/Footer/Footer';
 import { WeatherSEO } from '../../components/SEO/SEO';
 import { LocationStructuredData } from '../../components/SEO/StructuredData';
 import styles from './WeatherPage.module.css';
@@ -107,14 +108,7 @@ export function WeatherPage() {
         <NearbyLocations slug={location.slug} />
       </main>
 
-      <footer className={styles.footer}>
-        <nav className={styles.footerNav}>
-          <Link to="/about">About</Link>
-          <Link to="/privacy">Privacy</Link>
-          <Link to="/terms">Terms</Link>
-        </nav>
-        <p>Weather data from <a href="https://www.weatherapi.com" target="_blank" rel="noopener noreferrer">WeatherAPI.com</a></p>
-      </footer>
+      <Footer />
     </div>
   );
 }

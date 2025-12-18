@@ -131,29 +131,6 @@
   text-decoration: none;
 }
 
-.footer {
-  padding: var(--space-6);
-  text-align: center;
-  font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
-}
-
-.footerNav {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-6);
-  margin-bottom: var(--space-4);
-}
-
-.footer a {
-  color: var(--color-text-secondary);
-  text-decoration: none;
-}
-
-.footer a:hover {
-  color: var(--color-primary);
-}
-
 @media (min-width: 768px) {
   .headerContent {
     padding: var(--space-4) var(--space-6);

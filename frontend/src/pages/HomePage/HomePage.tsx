@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
 import { SearchBox } from '../../components/SearchBox/SearchBox';
 import { LocationLinks } from '../../components/LocationLinks/LocationLinks';
 import { KaboolyBanner } from '../../components/KaboolyBanner/KaboolyBanner';
+import { Footer } from '../../components/Footer/Footer';
 import { SEO } from '../../components/SEO/SEO';
 import { WebsiteStructuredData } from '../../components/SEO/StructuredData';
 import styles from './HomePage.module.css';
@@ -54,14 +54,7 @@ export function HomePage() {
         </div>
       </main>
 
-      <footer className={styles.footer}>
-        <nav className={styles.footerNav}>
-          <Link to="/about">About</Link>
-          <Link to="/privacy">Privacy</Link>
-          <Link to="/terms">Terms</Link>
-        </nav>
-        <p>Weather data from <a href="https://www.weatherapi.com" target="_blank" rel="noopener noreferrer">WeatherAPI.com</a></p>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -113,15 +113,7 @@ export function PrivacyPage() {
         <p>
           Because we use privacy-focused, cookieless analytics and do not
           collect personal information, we do not hold any data that identifies
-          you as an individual. If you have any concerns about your privacy,
-          please contact us.
-        </p>
-
-        <h2>Contact us</h2>
-
-        <p>
-          For privacy-related questions, contact us at{' '}
-          <a href="mailto:hello@doineedabrolly.co.uk">hello@doineedabrolly.co.uk</a>
+          you as an individual.
         </p>
 
         <h2>Changes to this policy</h2>

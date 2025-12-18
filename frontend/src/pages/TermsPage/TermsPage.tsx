@@ -118,12 +118,6 @@ export function TermsPage() {
           English courts.
         </p>
 
-        <h2>Contact</h2>
-
-        <p>
-          For questions about these terms, contact us at{' '}
-          <a href="mailto:hello@doineedabrolly.co.uk">hello@doineedabrolly.co.uk</a>
-        </p>
       </article>
     </Layout>
   );
