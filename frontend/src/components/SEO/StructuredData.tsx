@@ -101,3 +101,37 @@ export function WebsiteStructuredData({ searchUrl }: WebsiteStructuredDataProps)
 
   return null;
 }
+
+export function OrganizationStructuredData() {
+  useEffect(() => {
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'Do I Need A Brolly',
+      url: 'https://doineedabrolly.co.uk',
+      logo: 'https://doineedabrolly.co.uk/favicon.svg',
+      description: 'Plain English weather forecasts for every town and village in the UK',
+      areaServed: {
+        '@type': 'Country',
+        name: 'United Kingdom',
+      },
+    };
+
+    const existing = document.querySelector('script[data-structured-data="organization"]');
+    if (existing) {
+      existing.remove();
+    }
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.setAttribute('data-structured-data', 'organization');
+    script.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
+  }, []);
+
+  return null;
+}
