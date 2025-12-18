@@ -51,8 +51,15 @@ export interface Location {
   lon: number;
 }
 
+export interface SearchResult {
+  type: 'location' | 'county';
+  slug: string;
+  name: string;
+  subtitle: string;
+}
+
 export interface LocationSearchResponse {
-  results: Location[];
+  results: SearchResult[];
   total: number;
 }
 

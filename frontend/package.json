@@ -10,7 +10,8 @@
     "preview": "wrangler pages dev dist",
     "typecheck": "tsc --noEmit",
     "typecheck:functions": "tsc --project functions/tsconfig.json",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "generate:sitemap": "npx tsx scripts/generateSitemap.ts"
   },
   "dependencies": {
     "react": "^19.0.0",

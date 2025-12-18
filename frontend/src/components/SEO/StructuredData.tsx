@@ -102,6 +102,53 @@ export function WebsiteStructuredData({ searchUrl }: WebsiteStructuredDataProps)
   return null;
 }
 
+interface CountyStructuredDataProps {
+  countyName: string;
+  slug: string;
+  locationCount: number;
+}
+
+export function CountyStructuredData({
+  countyName,
+  slug,
+  locationCount,
+}: CountyStructuredDataProps) {
+  useEffect(() => {
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: `${countyName} Weather - All Towns & Villages`,
+      description: `Weather forecasts for ${locationCount} towns and villages in ${countyName}`,
+      url: `https://doineedabrolly.co.uk/county/${slug}`,
+      mainEntity: {
+        '@type': 'AdministrativeArea',
+        name: countyName,
+        containedInPlace: {
+          '@type': 'Country',
+          name: 'United Kingdom',
+        },
+      },
+    };
+
+    const existing = document.querySelector('script[data-structured-data="county"]');
+    if (existing) {
+      existing.remove();
+    }
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.setAttribute('data-structured-data', 'county');
+    script.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
+  }, [countyName, slug, locationCount]);
+
+  return null;
+}
+
 export function OrganizationStructuredData() {
   useEffect(() => {
     const structuredData = {

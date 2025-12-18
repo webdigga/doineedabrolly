@@ -1,10 +1,10 @@
 import { config } from '../config';
-import type { Location, LocationSearchResponse } from '../types';
+import type { Location, LocationSearchResponse, SearchResult } from '../types';
 
 /**
- * Search for locations by name prefix
+ * Search for locations and counties by name prefix
  */
-export async function searchLocations(query: string, limit = 10): Promise<Location[]> {
+export async function searchLocations(query: string, limit = 10): Promise<SearchResult[]> {
   if (!query || query.length < 2) {
     return [];
   }

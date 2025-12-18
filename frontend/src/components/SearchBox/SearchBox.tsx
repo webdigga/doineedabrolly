@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocationSearch } from '../../hooks/useLocationSearch';
-import type { Location } from '../../types';
+import type { SearchResult } from '../../types';
 import styles from './SearchBox.module.css';
 
 interface SearchBoxProps {
@@ -23,11 +23,15 @@ export function SearchBox({ autoFocus = false, placeholder = "Search for a town 
     setHighlightedIndex(-1);
   }, [results]);
 
-  // Handle selecting a location
-  const handleSelect = (location: Location) => {
+  // Handle selecting a result (location or county)
+  const handleSelect = (result: SearchResult) => {
     setQuery('');
     setIsOpen(false);
-    navigate(`/weather/${location.slug}`);
+    if (result.type === 'county') {
+      navigate(`/county/${result.slug}`);
+    } else {
+      navigate(`/weather/${result.slug}`);
+    }
   };
 
   // Keyboard navigation
@@ -107,19 +111,17 @@ export function SearchBox({ autoFocus = false, placeholder = "Search for a town 
           role="listbox"
           aria-label="Search results"
         >
-          {results.map((location, index) => (
+          {results.map((result, index) => (
             <li
-              key={location.slug}
-              className={`${styles.option} ${index === highlightedIndex ? styles.highlighted : ''}`}
-              onClick={() => handleSelect(location)}
+              key={`${result.type}-${result.slug}`}
+              className={`${styles.option} ${index === highlightedIndex ? styles.highlighted : ''} ${result.type === 'county' ? styles.countyOption : ''}`}
+              onClick={() => handleSelect(result)}
               onMouseEnter={() => setHighlightedIndex(index)}
               role="option"
               aria-selected={index === highlightedIndex}
             >
-              <span className={styles.locationName}>{location.name}</span>
-              {location.county && (
-                <span className={styles.locationCounty}>{location.county}</span>
-              )}
+              <span className={styles.locationName}>{result.name}</span>
+              <span className={styles.locationCounty}>{result.subtitle}</span>
             </li>
           ))}
         </ul>

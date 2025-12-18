@@ -72,7 +72,14 @@ export interface LocationResponse {
   lon: number;
 }
 
+export interface SearchResult {
+  type: 'location' | 'county';
+  slug: string;
+  name: string;
+  subtitle: string;
+}
+
 export interface SearchResponse {
-  results: LocationResponse[];
+  results: SearchResult[];
   total: number;
 }

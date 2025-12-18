@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://doineedabrolly.co.uk/sitemap.xml
+Sitemap: https://doineedmybrolly.co.uk/sitemap.xml

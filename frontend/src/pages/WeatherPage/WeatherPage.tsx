@@ -96,7 +96,11 @@ export function WeatherPage() {
         <div className={styles.locationHeader}>
           <h1 className={styles.locationName}>{location.name} Weather</h1>
           {location.county && (
-            <p className={styles.county}>{location.county}</p>
+            <p className={styles.county}>
+              <Link to={`/county/${location.countySlug}`} className={styles.countyLink}>
+                {location.county}
+              </Link>
+            </p>
           )}
         </div>
 
