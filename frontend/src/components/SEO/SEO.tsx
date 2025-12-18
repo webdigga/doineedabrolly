@@ -8,6 +8,7 @@ interface SEOProps {
 
 const SITE_NAME = 'Do I Need A Brolly';
 const DOMAIN = 'https://doineedabrolly.co.uk';
+const OG_IMAGE = `${DOMAIN}/og-image.png`;
 
 export function SEO({ title, description, canonicalPath }: SEOProps) {
   useEffect(() => {
@@ -38,14 +39,18 @@ export function SEO({ title, description, canonicalPath }: SEOProps) {
     updateMetaTag('og:title', `${title} | ${SITE_NAME}`);
     updateMetaTag('og:description', description);
     updateMetaTag('og:type', 'website');
+    updateMetaTag('og:image', OG_IMAGE);
+    updateMetaTag('og:image:width', '1200');
+    updateMetaTag('og:image:height', '630');
     if (canonicalPath) {
       updateMetaTag('og:url', `${DOMAIN}${canonicalPath}`);
     }
 
     // Twitter Card tags
-    updateMetaTag('twitter:card', 'summary');
+    updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:title', `${title} | ${SITE_NAME}`);
     updateMetaTag('twitter:description', description);
+    updateMetaTag('twitter:image', OG_IMAGE);
 
   }, [title, description, canonicalPath]);
 
