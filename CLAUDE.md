@@ -2,7 +2,7 @@
 
 A high-traffic UK weather website delivering plain English weather forecasts for every town and village in the UK. Built with React + Vite frontend hosted on Cloudflare Pages, with Cloudflare Workers handling API caching and data transformation.
 
-**Domain:** doineedmybrolly.co.uk
+**Domain:** doineedabrolly.co.uk
 
 **Purpose:** Generate traffic through SEO-optimised town pages, monetised via Kabooly CRM advertising.
 
@@ -79,7 +79,7 @@ This is a stateless site. All data comes from:
 ## Project Structure
 
 ```
-doineedmybrolly/
+doineedabrolly/
 ├── frontend/                    # React + Vite application
 │   ├── src/
 │   │   ├── components/          # Reusable React components
@@ -828,7 +828,7 @@ import styles from './KaboolyBanner.module.css';
 export function KaboolyBanner() {
   return (
     <a 
-      href="https://kabooly.com/crm/how-it-works/?utm_source=doineedmybrolly&utm_medium=banner&utm_campaign=weather"
+      href="https://kabooly.com/crm/how-it-works/?utm_source=doineedabrolly&utm_medium=banner&utm_campaign=weather"
       target="_blank"
       rel="noopener"
       className={styles.banner}
@@ -881,7 +881,7 @@ export function KaboolyBanner() {
 ### UTM Parameters
 
 All Kabooly links should include tracking:
-- `utm_source=doineedmybrolly`
+- `utm_source=doineedabrolly`
 - `utm_medium=banner`
 - `utm_campaign=weather`
 
@@ -928,7 +928,7 @@ Generate sitemap.xml with all location pages:
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://doineedmybrolly.co.uk/weather/taunton</loc>
+    <loc>https://doineedabrolly.co.uk/weather/somerset/taunton</loc>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>
