@@ -8,6 +8,11 @@ export function KaboolyBanner() {
       rel="noopener noreferrer"
       className={styles.banner}
     >
+      <img
+        src="/rocket-background.png"
+        alt="Kabooly"
+        className={styles.logo}
+      />
       <span className={styles.text}>
         Need a CRM? Try Kabooly - simple, powerful, and refreshingly easy to use
       </span>
