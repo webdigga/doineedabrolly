@@ -113,7 +113,7 @@ export function WeatherPage() {
           <Link to="/privacy">Privacy</Link>
           <Link to="/terms">Terms</Link>
         </nav>
-        <p>Weather data from <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer">Open-Meteo</a></p>
+        <p>Weather data from <a href="https://www.weatherapi.com" target="_blank" rel="noopener noreferrer">WeatherAPI.com</a></p>
       </footer>
     </div>
   );

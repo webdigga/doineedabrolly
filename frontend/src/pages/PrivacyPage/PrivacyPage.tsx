@@ -36,19 +36,21 @@ export function PrivacyPage() {
         <h3>Automatically collected information</h3>
 
         <p>
-          When you visit our website, we may automatically collect:
+          We use Cloudflare Web Analytics to understand how visitors use our
+          site. This is a privacy-focused analytics service that:
         </p>
 
         <ul>
-          <li>Your IP address</li>
-          <li>Browser type and version</li>
-          <li>Pages you visit and time spent</li>
-          <li>Referring website</li>
+          <li>Does not use cookies</li>
+          <li>Does not track individual users</li>
+          <li>Does not collect personal information</li>
+          <li>Anonymizes all data</li>
         </ul>
 
         <p>
-          This information is collected through standard web server logs and
-          analytics tools to help us improve our service.
+          We can see aggregate statistics such as page views, referring
+          websites, and general browser/device types, but we cannot identify
+          individual visitors.
         </p>
 
         <h3>Location data</h3>
@@ -72,9 +74,9 @@ export function PrivacyPage() {
         <h2>Cookies</h2>
 
         <p>
-          We use essential cookies to ensure our website functions correctly.
-          We may also use analytics cookies to understand how visitors use our
-          site. You can disable cookies in your browser settings.
+          This website does not use cookies. We do not use tracking cookies,
+          analytics cookies, or advertising cookies. Our analytics provider
+          (Cloudflare Web Analytics) is cookieless by design.
         </p>
 
         <h2>Third-party services</h2>
@@ -83,10 +85,14 @@ export function PrivacyPage() {
 
         <ul>
           <li>
-            <strong>Open-Meteo</strong> - Weather data provider
+            <strong>WeatherAPI.com</strong> - Weather data provider. When you view
+            a weather forecast, we request data from WeatherAPI.com using the
+            location's coordinates (not your personal location).
           </li>
           <li>
-            <strong>Cloudflare</strong> - Website hosting and security
+            <strong>Cloudflare</strong> - Website hosting, security, and
+            privacy-focused web analytics. Cloudflare Web Analytics does not
+            use cookies or track individual users.
           </li>
         </ul>
 
@@ -104,13 +110,12 @@ export function PrivacyPage() {
 
         <h2>Your rights</h2>
 
-        <p>You have the right to:</p>
-
-        <ul>
-          <li>Access information we hold about you</li>
-          <li>Request deletion of your data</li>
-          <li>Opt out of analytics</li>
-        </ul>
+        <p>
+          Because we use privacy-focused, cookieless analytics and do not
+          collect personal information, we do not hold any data that identifies
+          you as an individual. If you have any concerns about your privacy,
+          please contact us.
+        </p>
 
         <h2>Contact us</h2>
 

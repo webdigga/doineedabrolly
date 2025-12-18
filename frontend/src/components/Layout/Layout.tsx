@@ -37,8 +37,8 @@ export function Layout({ children, showSearch = true }: LayoutProps) {
           </nav>
           <p className={styles.attribution}>
             Weather data from{' '}
-            <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer">
-              Open-Meteo
+            <a href="https://www.weatherapi.com" target="_blank" rel="noopener noreferrer">
+              WeatherAPI.com
             </a>
           </p>
         </div>

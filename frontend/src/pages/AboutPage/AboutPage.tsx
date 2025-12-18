@@ -51,11 +51,11 @@ export function AboutPage() {
 
         <p>
           Weather forecasts are powered by{' '}
-          <a href="https://open-meteo.com" target="_blank" rel="noopener noreferrer">
-            Open-Meteo
+          <a href="https://www.weatherapi.com" target="_blank" rel="noopener noreferrer">
+            WeatherAPI.com
           </a>
-          , which aggregates data from national weather services including the
-          UK Met Office, NOAA, and others.
+          , providing accurate and up-to-date weather data for locations across
+          the UK.
         </p>
 
         <p>
