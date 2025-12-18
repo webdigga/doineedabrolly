@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0066cc"/>
+      <stop offset="100%" style="stop-color:#004499"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#sky)"/>
+  <!-- Umbrella canopy -->
+  <path d="M50 20 C25 20 12 40 12 55 L22 55 C22 48 28 42 35 42 C35 48 40 52 50 52 C60 52 65 48 65 42 C72 42 78 48 78 55 L88 55 C88 40 75 20 50 20" fill="#ffffff"/>
+  <!-- Umbrella handle -->
+  <path d="M50 52 L50 75 Q50 82 43 82" stroke="#ffffff" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
