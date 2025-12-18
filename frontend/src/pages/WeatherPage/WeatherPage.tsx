@@ -7,6 +7,7 @@ import { HourlyForecast } from '../../components/HourlyForecast/HourlyForecast';
 import { DailyForecast } from '../../components/DailyForecast/DailyForecast';
 import { NearbyLocations } from '../../components/NearbyLocations/NearbyLocations';
 import { WeatherFAQ } from '../../components/WeatherFAQ/WeatherFAQ';
+import { WeatherTips } from '../../components/WeatherTips/WeatherTips';
 import { WeatherBreadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs';
 import { SearchBox } from '../../components/SearchBox/SearchBox';
 import { KaboolyBanner } from '../../components/KaboolyBanner/KaboolyBanner';
@@ -108,6 +109,11 @@ export function WeatherPage() {
         <CurrentWeather current={weather.current} />
         <HourlyForecast hours={todayHours} />
         <DailyForecast days={weather.daily} />
+        <WeatherTips
+          locationName={location.name}
+          current={weather.current}
+          today={weather.daily[0]}
+        />
         <WeatherFAQ locationName={location.name} weather={weather} />
         <NearbyLocations slug={location.slug} />
       </main>
