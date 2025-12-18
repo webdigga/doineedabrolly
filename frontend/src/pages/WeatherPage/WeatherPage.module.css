@@ -65,22 +65,6 @@
   margin: 0 0 var(--space-1) 0;
 }
 
-.county {
-  font-size: var(--text-base);
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-
-.countyLink {
-  color: var(--color-text-secondary);
-  text-decoration: none;
-}
-
-.countyLink:hover {
-  color: var(--color-primary);
-  text-decoration: underline;
-}
-
 .loading {
   flex: 1;
   display: flex;

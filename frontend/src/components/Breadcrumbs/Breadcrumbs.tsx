@@ -61,17 +61,24 @@ function BreadcrumbStructuredData({ items }: { items: BreadcrumbItem[] }) {
 interface WeatherBreadcrumbsProps {
   locationName: string;
   county?: string;
+  countySlug?: string;
   slug: string;
 }
 
-export function WeatherBreadcrumbs({ locationName, county, slug }: WeatherBreadcrumbsProps) {
+export function WeatherBreadcrumbs({ locationName, county, countySlug, slug }: WeatherBreadcrumbsProps) {
   const items: BreadcrumbItem[] = [];
 
   if (county) {
-    items.push({ label: county });
+    // Only link county if we have a countySlug (meaning a county page exists)
+    items.push({
+      label: county,
+      href: countySlug ? `/county/${countySlug}` : undefined
+    });
   }
 
-  items.push({ label: `${locationName} Weather`, href: `/weather/${slug}` });
+  // Use countySlug in the weather page URL
+  const weatherHref = countySlug ? `/weather/${countySlug}/${slug}` : `/weather/${slug}`;
+  items.push({ label: `${locationName} Weather`, href: weatherHref });
 
   return <Breadcrumbs items={items} />;
 }

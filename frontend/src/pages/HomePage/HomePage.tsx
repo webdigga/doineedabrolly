@@ -7,18 +7,18 @@ import { WebsiteStructuredData, OrganizationStructuredData } from '../../compone
 import styles from './HomePage.module.css';
 
 const POPULAR_LOCATIONS = [
-  { slug: 'london', name: 'London' },
-  { slug: 'manchester', name: 'Manchester' },
-  { slug: 'birmingham', name: 'Birmingham' },
-  { slug: 'leeds', name: 'Leeds' },
-  { slug: 'glasgow', name: 'Glasgow' },
-  { slug: 'liverpool', name: 'Liverpool' },
-  { slug: 'edinburgh', name: 'Edinburgh' },
-  { slug: 'bristol', name: 'Bristol' },
-  { slug: 'sheffield', name: 'Sheffield' },
-  { slug: 'newcastle-upon-tyne', name: 'Newcastle' },
-  { slug: 'nottingham', name: 'Nottingham' },
-  { slug: 'cardiff', name: 'Cardiff' },
+  { slug: 'london', countySlug: 'greater-london', name: 'London' },
+  { slug: 'manchester', countySlug: 'greater-manchester', name: 'Manchester' },
+  { slug: 'birmingham', countySlug: 'west-midlands', name: 'Birmingham' },
+  { slug: 'leeds', countySlug: 'west-yorkshire', name: 'Leeds' },
+  { slug: 'glasgow', countySlug: 'glasgow-city', name: 'Glasgow' },
+  { slug: 'liverpool', countySlug: 'merseyside', name: 'Liverpool' },
+  { slug: 'edinburgh', countySlug: 'city-of-edinburgh', name: 'Edinburgh' },
+  { slug: 'bristol', countySlug: 'bristol', name: 'Bristol' },
+  { slug: 'sheffield', countySlug: 'south-yorkshire', name: 'Sheffield' },
+  { slug: 'newcastle-upon-tyne', countySlug: 'tyne-and-wear', name: 'Newcastle' },
+  { slug: 'nottingham', countySlug: 'nottinghamshire', name: 'Nottingham' },
+  { slug: 'cardiff', countySlug: 'cardiff', name: 'Cardiff' },
 ];
 
 export function HomePage() {

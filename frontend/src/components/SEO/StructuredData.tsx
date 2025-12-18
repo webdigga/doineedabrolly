@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 interface LocationStructuredDataProps {
   locationName: string;
   county?: string;
+  countySlug?: string;
   lat: number;
   lon: number;
   slug: string;
@@ -11,17 +12,21 @@ interface LocationStructuredDataProps {
 export function LocationStructuredData({
   locationName,
   county,
+  countySlug,
   lat,
   lon,
   slug,
 }: LocationStructuredDataProps) {
   useEffect(() => {
+    const url = countySlug
+      ? `https://doineedabrolly.co.uk/weather/${countySlug}/${slug}`
+      : `https://doineedabrolly.co.uk/weather/${slug}`;
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: `${locationName} Weather Forecast`,
       description: `Plain English weather forecast for ${locationName}${county ? `, ${county}` : ''}`,
-      url: `https://doineedabrolly.co.uk/weather/${slug}`,
+      url,
       mainEntity: {
         '@type': 'Place',
         name: locationName,
@@ -54,7 +59,7 @@ export function LocationStructuredData({
     return () => {
       script.remove();
     };
-  }, [locationName, county, lat, lon, slug]);
+  }, [locationName, county, countySlug, lat, lon, slug]);
 
   return null;
 }

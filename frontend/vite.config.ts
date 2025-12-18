@@ -18,4 +18,23 @@ export default defineConfig({
       '@styles': resolve(__dirname, './src/styles'),
     },
   },
+  build: {
+    // Chunk splitting for better caching
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunk for React
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+    // Target modern browsers for smaller bundles
+    target: 'es2020',
+    // Disable source maps for smaller production builds
+    sourcemap: false,
+  },
+  // Drop console in production
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
 });

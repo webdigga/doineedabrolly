@@ -5,7 +5,7 @@ import { WeatherSummary } from '../../components/WeatherSummary/WeatherSummary';
 import { CurrentWeather } from '../../components/CurrentWeather/CurrentWeather';
 import { HourlyForecast } from '../../components/HourlyForecast/HourlyForecast';
 import { DailyForecast } from '../../components/DailyForecast/DailyForecast';
-import { NearbyLocations } from '../../components/NearbyLocations/NearbyLocations';
+import { MoreInCounty } from '../../components/MoreInCounty/MoreInCounty';
 import { WeatherFAQ } from '../../components/WeatherFAQ/WeatherFAQ';
 import { WeatherTips } from '../../components/WeatherTips/WeatherTips';
 import { WeatherBreadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs';
@@ -17,7 +17,7 @@ import { LocationStructuredData } from '../../components/SEO/StructuredData';
 import styles from './WeatherPage.module.css';
 
 export function WeatherPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams<{ countySlug: string; slug: string }>();
   const { location, isLoading: locationLoading, notFound } = useLocation(slug);
   const { weather, isLoading: weatherLoading, error } = useWeather(location?.lat, location?.lon);
 
@@ -66,12 +66,14 @@ export function WeatherPage() {
       <WeatherSEO
         locationName={location.name}
         county={location.county}
+        countySlug={location.countySlug}
         headline={weather.summary.headline}
         slug={location.slug}
       />
       <LocationStructuredData
         locationName={location.name}
         county={location.county}
+        countySlug={location.countySlug}
         lat={location.lat}
         lon={location.lon}
         slug={location.slug}
@@ -92,17 +94,11 @@ export function WeatherPage() {
         <WeatherBreadcrumbs
           locationName={location.name}
           county={location.county}
+          countySlug={location.countySlug}
           slug={location.slug}
         />
         <div className={styles.locationHeader}>
           <h1 className={styles.locationName}>{location.name} Weather</h1>
-          {location.county && (
-            <p className={styles.county}>
-              <Link to={`/county/${location.countySlug}`} className={styles.countyLink}>
-                {location.county}
-              </Link>
-            </p>
-          )}
         </div>
 
         <WeatherSummary summary={weather.summary} />
@@ -115,7 +111,13 @@ export function WeatherPage() {
           today={weather.daily[0]}
         />
         <WeatherFAQ locationName={location.name} weather={weather} />
-        <NearbyLocations slug={location.slug} />
+        {location.county && location.countySlug && (
+          <MoreInCounty
+            county={location.county}
+            countySlug={location.countySlug}
+            currentSlug={location.slug}
+          />
+        )}
       </main>
 
       <Footer />

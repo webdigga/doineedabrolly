@@ -96,9 +96,9 @@ async function main() {
   );
   console.log(`Generated ${countyUrls.length} county URLs`);
 
-  // Location URLs
+  // Location URLs - using new /weather/countySlug/slug format
   const locationUrls = locations.map(loc =>
-    generateUrlEntry(`/weather/${loc.slug}`, 'hourly', '0.8')
+    generateUrlEntry(`/weather/${loc.countySlug}/${loc.slug}`, 'hourly', '0.8')
   );
 
   // Combine all URLs

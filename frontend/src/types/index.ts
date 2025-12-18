@@ -54,6 +54,7 @@ export interface Location {
 export interface SearchResult {
   type: 'location' | 'county';
   slug: string;
+  countySlug?: string;  // Only for location type
   name: string;
   subtitle: string;
 }

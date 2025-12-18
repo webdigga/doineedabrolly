@@ -46,6 +46,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     .map(loc => ({
       type: 'location' as const,
       slug: loc.slug,
+      countySlug: loc.countySlug,
       name: loc.name,
       subtitle: loc.county,
     }));

@@ -3,6 +3,7 @@ import styles from './LocationLinks.module.css';
 
 interface Location {
   slug: string;
+  countySlug?: string;
   name: string;
   county?: string;
 }
@@ -26,7 +27,7 @@ export function LocationLinks({ title, locations, showCounty = false, centered =
         {locations.map((location) => (
           <Link
             key={location.slug}
-            to={`/weather/${location.slug}`}
+            to={`/weather/${location.countySlug}/${location.slug}`}
             className={styles.link}
           >
             {location.name}

@@ -30,7 +30,8 @@ export function SearchBox({ autoFocus = false, placeholder = "Search for a town 
     if (result.type === 'county') {
       navigate(`/county/${result.slug}`);
     } else {
-      navigate(`/weather/${result.slug}`);
+      // Use countySlug/slug for location URLs
+      navigate(`/weather/${result.countySlug}/${result.slug}`);
     }
   };
 

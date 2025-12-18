@@ -98,7 +98,7 @@ export function CountyPage() {
             {locations.map((location) => (
               <Link
                 key={location.slug}
-                to={`/weather/${location.slug}`}
+                to={`/weather/${countySlug}/${location.slug}`}
                 className={styles.locationLink}
               >
                 {location.name}

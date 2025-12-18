@@ -79,14 +79,16 @@ function updateMetaTag(property: string, content: string) {
 interface WeatherSEOProps {
   locationName: string;
   county?: string;
+  countySlug?: string;
   headline: string;
   slug: string;
 }
 
-export function WeatherSEO({ locationName, county, headline, slug }: WeatherSEOProps) {
+export function WeatherSEO({ locationName, county, countySlug, headline, slug }: WeatherSEOProps) {
   const location = county ? `${locationName}, ${county}` : locationName;
   const title = `${locationName} Weather - Today, Tomorrow & 7 Day Forecast`;
   const description = `${location} weather: ${headline}. Get the plain English forecast for today, tomorrow and the week ahead.`;
+  const canonicalPath = countySlug ? `/weather/${countySlug}/${slug}` : `/weather/${slug}`;
 
-  return <SEO title={title} description={description} canonicalPath={`/weather/${slug}`} />;
+  return <SEO title={title} description={description} canonicalPath={canonicalPath} />;
 }
