@@ -15,7 +15,7 @@ export function Layout({ children, showSearch = true }: LayoutProps) {
 
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <Link to="/" className={styles.logo}>Do I Need My Brolly?</Link>
+          <Link to="/" className={styles.logo}>Do I Need A Brolly?</Link>
           {showSearch && (
             <div className={styles.searchWrapper}>
               <SearchBox placeholder="Search location..." />

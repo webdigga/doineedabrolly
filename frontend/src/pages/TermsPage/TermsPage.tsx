@@ -7,7 +7,7 @@ export function TermsPage() {
     <Layout>
       <SEO
         title="Terms of Service"
-        description="Terms of service for Do I Need My Brolly - conditions for using our weather forecast service."
+        description="Terms of service for Do I Need A Brolly - conditions for using our weather forecast service."
         canonicalPath="/terms"
       />
 
@@ -19,7 +19,7 @@ export function TermsPage() {
         <h2>Agreement to terms</h2>
 
         <p>
-          By accessing or using Do I Need My Brolly ("the Service"), you agree
+          By accessing or using Do I Need A Brolly ("the Service"), you agree
           to be bound by these Terms of Service. If you do not agree to these
           terms, please do not use the Service.
         </p>
@@ -27,7 +27,7 @@ export function TermsPage() {
         <h2>Description of service</h2>
 
         <p>
-          Do I Need My Brolly provides weather forecasts and summaries for
+          Do I Need A Brolly provides weather forecasts and summaries for
           locations in the United Kingdom. The Service is provided free of
           charge and is intended for personal, non-commercial use.
         </p>
@@ -122,7 +122,7 @@ export function TermsPage() {
 
         <p>
           For questions about these terms, contact us at{' '}
-          <a href="mailto:hello@doineedmybrolly.co.uk">hello@doineedmybrolly.co.uk</a>
+          <a href="mailto:hello@doineedabrolly.co.uk">hello@doineedabrolly.co.uk</a>
         </p>
       </article>
     </Layout>

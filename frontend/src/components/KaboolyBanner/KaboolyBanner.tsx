@@ -3,7 +3,7 @@ import styles from './KaboolyBanner.module.css';
 export function KaboolyBanner() {
   return (
     <a
-      href="https://kabooly.com/crm/how-it-works/?utm_source=doineedmybrolly&utm_medium=banner&utm_campaign=weather"
+      href="https://kabooly.com/crm/how-it-works/?utm_source=doineedabrolly&utm_medium=banner&utm_campaign=weather"
       target="_blank"
       rel="noopener noreferrer"
       className={styles.banner}

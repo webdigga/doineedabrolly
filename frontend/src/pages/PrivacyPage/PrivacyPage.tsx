@@ -7,7 +7,7 @@ export function PrivacyPage() {
     <Layout>
       <SEO
         title="Privacy Policy"
-        description="Privacy policy for Do I Need My Brolly - how we handle your data."
+        description="Privacy policy for Do I Need A Brolly - how we handle your data."
         canonicalPath="/privacy"
       />
 
@@ -19,9 +19,9 @@ export function PrivacyPage() {
         <h2>Overview</h2>
 
         <p>
-          Do I Need My Brolly ("we", "us", "our") is committed to protecting your
+          Do I Need A Brolly ("we", "us", "our") is committed to protecting your
           privacy. This policy explains how we collect, use, and protect your
-          information when you use our website at doineedmybrolly.co.uk.
+          information when you use our website at doineedabrolly.co.uk.
         </p>
 
         <h2>Information we collect</h2>
@@ -116,7 +116,7 @@ export function PrivacyPage() {
 
         <p>
           For privacy-related questions, contact us at{' '}
-          <a href="mailto:hello@doineedmybrolly.co.uk">hello@doineedmybrolly.co.uk</a>
+          <a href="mailto:hello@doineedabrolly.co.uk">hello@doineedabrolly.co.uk</a>
         </p>
 
         <h2>Changes to this policy</h2>

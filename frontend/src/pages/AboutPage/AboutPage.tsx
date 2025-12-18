@@ -7,17 +7,17 @@ export function AboutPage() {
     <Layout>
       <SEO
         title="About"
-        description="Learn about Do I Need My Brolly - plain English weather forecasts for every town and village in the UK."
+        description="Learn about Do I Need A Brolly - plain English weather forecasts for every town and village in the UK."
         canonicalPath="/about"
       />
 
       <article className={styles.content}>
-        <h1>About Do I Need My Brolly</h1>
+        <h1>About Do I Need A Brolly</h1>
 
         <p>
           We believe checking the weather should be simple. Instead of deciphering
           numbers and percentages, we give you plain English answers to the only
-          question that matters: <strong>do I need my brolly?</strong>
+          question that matters: <strong>do I need a brolly?</strong>
         </p>
 
         <h2>What makes us different</h2>
@@ -66,7 +66,7 @@ export function AboutPage() {
 
         <p>
           Questions or feedback? We'd love to hear from you. Drop us a line at{' '}
-          <a href="mailto:hello@doineedmybrolly.co.uk">hello@doineedmybrolly.co.uk</a>
+          <a href="mailto:hello@doineedabrolly.co.uk">hello@doineedabrolly.co.uk</a>
         </p>
       </article>
     </Layout>

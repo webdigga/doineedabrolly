@@ -6,8 +6,8 @@ interface SEOProps {
   canonicalPath?: string;
 }
 
-const SITE_NAME = 'Do I Need My Brolly';
-const DOMAIN = 'https://doineedmybrolly.co.uk';
+const SITE_NAME = 'Do I Need A Brolly';
+const DOMAIN = 'https://doineedabrolly.co.uk';
 
 export function SEO({ title, description, canonicalPath }: SEOProps) {
   useEffect(() => {

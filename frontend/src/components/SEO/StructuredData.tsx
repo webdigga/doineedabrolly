@@ -21,7 +21,7 @@ export function LocationStructuredData({
       '@type': 'WebPage',
       name: `${locationName} Weather Forecast`,
       description: `Plain English weather forecast for ${locationName}${county ? `, ${county}` : ''}`,
-      url: `https://doineedmybrolly.co.uk/weather/${slug}`,
+      url: `https://doineedabrolly.co.uk/weather/${slug}`,
       mainEntity: {
         '@type': 'Place',
         name: locationName,
@@ -68,15 +68,15 @@ export function WebsiteStructuredData({ searchUrl }: WebsiteStructuredDataProps)
     const structuredData = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Do I Need My Brolly',
-      url: 'https://doineedmybrolly.co.uk',
+      name: 'Do I Need A Brolly',
+      url: 'https://doineedabrolly.co.uk',
       description: 'Plain English weather forecasts for every town and village in the UK',
       potentialAction: searchUrl
         ? {
             '@type': 'SearchAction',
             target: {
               '@type': 'EntryPoint',
-              urlTemplate: `https://doineedmybrolly.co.uk/weather/{search_term_string}`,
+              urlTemplate: `https://doineedabrolly.co.uk/weather/{search_term_string}`,
             },
             'query-input': 'required name=search_term_string',
           }

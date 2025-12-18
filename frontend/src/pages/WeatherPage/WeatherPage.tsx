@@ -79,7 +79,7 @@ export function WeatherPage() {
 
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <Link to="/" className={styles.logo}>Do I Need My Brolly?</Link>
+          <Link to="/" className={styles.logo}>Do I Need A Brolly?</Link>
           <div className={styles.searchWrapper}>
             <SearchBox placeholder="Search location..." />
           </div>

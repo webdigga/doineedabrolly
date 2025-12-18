@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styles from './Breadcrumbs.module.css';
 
-const DOMAIN = 'https://doineedmybrolly.co.uk';
+const DOMAIN = 'https://doineedabrolly.co.uk';
 
 interface BreadcrumbItem {
   label: string;

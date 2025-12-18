@@ -26,7 +26,7 @@ export function HomePage() {
     <div className={styles.page}>
       <SEO
         title="UK Weather Forecasts in Plain English"
-        description="Do I Need My Brolly? Plain English weather forecasts for every town and village in the UK. Find out if you need your umbrella today."
+        description="Do I Need A Brolly? Plain English weather forecasts for every town and village in the UK. Find out if you need your umbrella today."
         canonicalPath="/"
       />
       <WebsiteStructuredData />
@@ -35,7 +35,7 @@ export function HomePage() {
 
       <main className={styles.main}>
         <div className={styles.hero}>
-          <h1 className={styles.title}>Do I Need My Brolly?</h1>
+          <h1 className={styles.title}>Do I Need A Brolly?</h1>
           <p className={styles.subtitle}>
             Plain English weather forecasts for every town and village in the UK
           </p>
