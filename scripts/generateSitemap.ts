@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DOMAIN = 'https://doineedmybrolly.co.uk';
+const DOMAIN = 'https://doineedabrolly.co.uk';
 const MAX_URLS_PER_SITEMAP = 10000;
 
 interface Location {
@@ -53,10 +53,12 @@ async function generateSitemap() {
   // Generate individual sitemaps
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i];
-    const sitemapContent = generateSitemapXml(chunk, today);
+    const includeStatic = i === 0; // Only include static pages in first file
+    const sitemapContent = generateSitemapXml(chunk, today, includeStatic);
     const filename = `sitemap-locations-${i + 1}.xml`;
     fs.writeFileSync(path.join(outputDir, filename), sitemapContent);
-    console.log(`Generated ${filename} with ${chunk.length} URLs`);
+    const urlCount = chunk.length + (includeStatic ? 4 : 0);
+    console.log(`Generated ${filename} with ${urlCount} URLs`);
   }
 
   // Generate sitemap index
@@ -76,17 +78,15 @@ Sitemap: ${DOMAIN}/sitemap.xml
   console.log('Done!');
 }
 
-function generateSitemapXml(locations: Location[], lastmod: string): string {
+function generateSitemapXml(locations: Location[], lastmod: string, includeStatic: boolean): string {
   const urls = locations.map(loc => `  <url>
-    <loc>${DOMAIN}/weather/${loc.slug}</loc>
+    <loc>${DOMAIN}/weather/${loc.countySlug}/${loc.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
   </url>`).join('\n');
 
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
+  const staticPages = includeStatic ? `  <url>
     <loc>${DOMAIN}/</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>daily</changefreq>
@@ -110,7 +110,11 @@ function generateSitemapXml(locations: Location[], lastmod: string): string {
     <changefreq>monthly</changefreq>
     <priority>0.2</priority>
   </url>
-${urls}
+` : '';
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${staticPages}${urls}
 </urlset>`;
 }
 

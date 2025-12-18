@@ -6,9 +6,14 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const FRONTEND_DIR = path.resolve(__dirname, '..');
 
 const DOMAIN = 'https://doineedabrolly.co.uk';
-const PUBLIC_DIR = path.join(process.cwd(), 'public');
+const PUBLIC_DIR = path.join(FRONTEND_DIR, 'public');
 const TODAY = new Date().toISOString().split('T')[0];
 const MAX_URLS_PER_SITEMAP = 10000;
 
@@ -23,7 +28,7 @@ interface Location {
 
 // Import locations data
 async function loadLocations(): Promise<Location[]> {
-  const locationsPath = path.join(process.cwd(), 'functions/_shared/ukLocations.ts');
+  const locationsPath = path.join(FRONTEND_DIR, 'functions/_shared/ukLocations.ts');
   const content = fs.readFileSync(locationsPath, 'utf-8');
 
   // Extract the array from the file
