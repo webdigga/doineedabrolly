@@ -86,3 +86,77 @@ export function formatShortDate(isoDate: string): string {
   const date = new Date(isoDate);
   return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' });
 }
+
+/**
+ * Get weather code priority for determining most significant weather
+ * Higher = more significant/notable (precipitation takes priority)
+ */
+function getWeatherCodePriority(code: number): number {
+  if (code >= 95) return 100; // Thunderstorms - highest priority
+  if (code >= 80) return 80;  // Showers
+  if (code >= 71) return 70;  // Snow
+  if (code >= 61) return 60;  // Rain
+  if (code >= 51) return 50;  // Drizzle
+  if (code >= 45) return 40;  // Fog
+  if (code === 3) return 10;  // Overcast
+  if (code >= 1) return 5;    // Partly cloudy
+  return 0;                   // Clear
+}
+
+/**
+ * Filter hourly data to remaining hours from currentHour onwards
+ */
+function filterRemainingHours<T extends { time: string }>(
+  hourly: T[],
+  currentHour: number
+): T[] {
+  return hourly.filter(h => {
+    const hour = new Date(h.time).getHours();
+    return hour >= currentHour;
+  });
+}
+
+/**
+ * Get representative weather code from remaining hours of today
+ * Returns the most significant weather code from hours >= currentHour
+ */
+export function getRemainingWeatherCode(
+  hourly: Array<{ time: string; weatherCode: number }>,
+  currentHour: number
+): number {
+  const remainingHours = filterRemainingHours(hourly, currentHour);
+
+  if (remainingHours.length === 0) {
+    return 0; // Default to clear if no hours remaining
+  }
+
+  // Find the most significant weather code
+  let mostSignificant = remainingHours[0].weatherCode;
+  let highestPriority = getWeatherCodePriority(mostSignificant);
+
+  for (const hour of remainingHours) {
+    const priority = getWeatherCodePriority(hour.weatherCode);
+    if (priority > highestPriority) {
+      highestPriority = priority;
+      mostSignificant = hour.weatherCode;
+    }
+  }
+
+  return mostSignificant;
+}
+
+/**
+ * Get max precipitation probability from remaining hours of today
+ */
+export function getRemainingMaxPrecipitation(
+  hourly: Array<{ time: string; precipitationProbability: number }>,
+  currentHour: number
+): number {
+  const remainingHours = filterRemainingHours(hourly, currentHour);
+
+  if (remainingHours.length === 0) {
+    return 0;
+  }
+
+  return Math.max(...remainingHours.map(h => h.precipitationProbability));
+}

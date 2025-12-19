@@ -91,9 +91,17 @@ function analyzeRainPeriods(hourly: HourlyForecast[], currentHour: number = 0): 
   return { startsAt, endsAt, isCurrentlyRaining };
 }
 
+// Calculate remaining day's max precipitation probability from hourly data
+function getRemainingMaxPrecipProb(hourly: HourlyForecast[], currentHour: number): number {
+  const relevantHours = hourly.filter(h => getHourFromTime(h.time) >= currentHour);
+  if (relevantHours.length === 0) return 0;
+  return Math.max(...relevantHours.map(h => h.precipitationProbability));
+}
+
 // Generate the "brolly" headline
 function generateHeadline(today: ForecastDay, currentHour: number): string {
-  const rainProb = today.precipitationProbability;
+  // Use remaining hours' max probability, not the whole day's max
+  const rainProb = getRemainingMaxPrecipProb(today.hourly, currentHour);
   const rainAnalysis = analyzeRainPeriods(today.hourly, currentHour);
 
   // Check for snow first
