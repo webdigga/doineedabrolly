@@ -1,4 +1,10 @@
+import { getRemainingMaxPrecipitation } from '../../utils/weather';
 import styles from './WeatherFAQ.module.css';
+
+interface HourlyData {
+  time: string;
+  precipitationProbability: number;
+}
 
 interface WeatherData {
   summary: {
@@ -16,6 +22,7 @@ interface WeatherData {
     temperatureMax: number;
     temperatureMin: number;
     precipitationProbability: number;
+    hourly?: HourlyData[];
   }>;
 }
 
@@ -75,14 +82,21 @@ function FAQStructuredData({ faqs }: { faqs: FAQItem[] }) {
 function generateFAQs(locationName: string, weather: WeatherData): FAQItem[] {
   const today = weather.daily[0];
   const tomorrow = weather.daily[1];
-  const rainToday = today?.precipitationProbability > 40;
+  const currentHour = new Date().getHours();
+
+  // Use remaining hours' precipitation for today
+  const todayRainChance = today?.hourly?.length
+    ? getRemainingMaxPrecipitation(today.hourly, currentHour)
+    : today?.precipitationProbability ?? 0;
+
+  const rainToday = todayRainChance > 40;
   const rainTomorrow = tomorrow?.precipitationProbability > 40;
 
   const faqs: FAQItem[] = [
     {
       question: `Do I need an umbrella in ${locationName} today?`,
       answer: rainToday
-        ? `Yes, there's a ${today.precipitationProbability}% chance of rain in ${locationName} today. ${weather.summary.today}`
+        ? `Yes, there's a ${todayRainChance}% chance of rain in ${locationName} today. ${weather.summary.today}`
         : `No, you probably won't need an umbrella in ${locationName} today. ${weather.summary.today}`,
     },
     {

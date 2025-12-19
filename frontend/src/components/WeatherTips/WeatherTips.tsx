@@ -1,3 +1,4 @@
+import { getRemainingMaxPrecipitation } from '../../utils/weather';
 import styles from './WeatherTips.module.css';
 
 interface HourlyData {
@@ -29,8 +30,14 @@ interface WeatherTipsProps {
 }
 
 export function WeatherTips({ locationName, current, today }: WeatherTipsProps) {
-  const packingItems = getPackingItems(current, today);
-  const activities = getActivitySuggestions(current, today);
+  const currentHour = new Date().getHours();
+  // Use remaining hours' precipitation probability for today
+  const remainingRainChance = today.hourly?.length
+    ? getRemainingMaxPrecipitation(today.hourly, currentHour)
+    : today.precipitationProbability;
+
+  const packingItems = getPackingItems(current, today, remainingRainChance);
+  const activities = getActivitySuggestions(current, today, remainingRainChance);
   const bestTime = getBestTimeToGoOut(today.hourly);
   const seasonal = getSeasonalContext(locationName);
 
@@ -92,11 +99,12 @@ interface PackingItem {
 
 function getPackingItems(
   current: WeatherTipsProps['current'],
-  today: DailyData
+  today: DailyData,
+  remainingRainChance: number
 ): PackingItem[] {
   const items: PackingItem[] = [];
   const temp = current.temperature;
-  const rainChance = today.precipitationProbability;
+  const rainChance = remainingRainChance;
   const wind = current.windSpeed;
   const uv = today.uvIndexMax;
 
@@ -154,11 +162,12 @@ interface ActivitySuggestion {
 
 function getActivitySuggestions(
   current: WeatherTipsProps['current'],
-  today: DailyData
+  _today: DailyData,
+  remainingRainChance: number
 ): ActivitySuggestion[] {
   const suggestions: ActivitySuggestion[] = [];
   const temp = current.temperature;
-  const rainChance = today.precipitationProbability;
+  const rainChance = remainingRainChance;
   const weatherCode = current.weatherCode;
 
   // Rainy conditions
