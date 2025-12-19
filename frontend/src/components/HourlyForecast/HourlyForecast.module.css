@@ -64,6 +64,6 @@
 
 .rain {
   font-size: var(--text-xs);
-  color: var(--color-rain);
+  color: var(--color-rain-text);
   font-weight: var(--font-weight-medium);
 }

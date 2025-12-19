@@ -65,7 +65,7 @@
 
 .rain {
   font-size: var(--text-sm);
-  color: var(--color-rain);
+  color: var(--color-rain-text);
   font-weight: var(--font-weight-medium);
   min-width: 40px;
   text-align: right;
