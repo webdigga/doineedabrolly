@@ -97,10 +97,13 @@ export function SearchBox({ autoFocus = false, placeholder = "Search for a town 
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
+          role="combobox"
           aria-label="Search for a location"
           aria-expanded={isOpen}
+          aria-controls="search-listbox"
           aria-haspopup="listbox"
           aria-autocomplete="list"
+          aria-activedescendant={highlightedIndex >= 0 ? `search-option-${highlightedIndex}` : undefined}
         />
         {isLoading && <span className={styles.spinner} aria-hidden="true" />}
       </div>
@@ -108,6 +111,7 @@ export function SearchBox({ autoFocus = false, placeholder = "Search for a town 
       {isOpen && results.length > 0 && (
         <ul
           ref={listRef}
+          id="search-listbox"
           className={styles.dropdown}
           role="listbox"
           aria-label="Search results"
@@ -115,6 +119,7 @@ export function SearchBox({ autoFocus = false, placeholder = "Search for a town 
           {results.map((result, index) => (
             <li
               key={`${result.type}-${result.slug}`}
+              id={`search-option-${index}`}
               className={`${styles.option} ${index === highlightedIndex ? styles.highlighted : ''} ${result.type === 'county' ? styles.countyOption : ''}`}
               onClick={() => handleSelect(result)}
               onMouseEnter={() => setHighlightedIndex(index)}

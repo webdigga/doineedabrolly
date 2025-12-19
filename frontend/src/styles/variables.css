@@ -10,7 +10,7 @@
 
   --color-text-primary: #1a1a2e;
   --color-text-secondary: #4a5568;
-  --color-text-tertiary: #718096;
+  --color-text-tertiary: #5f6d7e; /* Darkened for WCAG AA contrast (5.3:1 on white) */
 
   --color-border: #e2e8f0;
 
