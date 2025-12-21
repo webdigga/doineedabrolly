@@ -18,7 +18,7 @@ export function Footer() {
         </p>
         <p className={styles.attribution}>
           Built by{' '}
-          <a href="https://kabooly.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://kabooly.com/?utm_source=doineedabrolly&utm_medium=footer&utm_campaign=weather" target="_blank" rel="noopener noreferrer">
             Kabooly
           </a>
         </p>
