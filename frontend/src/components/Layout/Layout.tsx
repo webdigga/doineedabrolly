@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { KaboolyBanner } from '../KaboolyBanner/KaboolyBanner';
+import { SideBanners } from '../SideBanners/SideBanners';
 import { SearchBox } from '../SearchBox/SearchBox';
 import { Footer } from '../Footer/Footer';
 import styles from './Layout.module.css';
@@ -29,6 +30,7 @@ export function Layout({ children, showSearch = true }: LayoutProps) {
         {children}
       </main>
 
+      <SideBanners />
       <Footer />
     </div>
   );

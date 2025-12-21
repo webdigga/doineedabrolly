@@ -11,6 +11,7 @@ import { WeatherTips } from '../../components/WeatherTips/WeatherTips';
 import { WeatherBreadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs';
 import { SearchBox } from '../../components/SearchBox/SearchBox';
 import { KaboolyBanner } from '../../components/KaboolyBanner/KaboolyBanner';
+import { SideBanners } from '../../components/SideBanners/SideBanners';
 import { Footer } from '../../components/Footer/Footer';
 import { WeatherSEO } from '../../components/SEO/SEO';
 import { LocationStructuredData } from '../../components/SEO/StructuredData';
@@ -120,6 +121,7 @@ export function WeatherPage() {
         )}
       </main>
 
+      <SideBanners />
       <Footer />
     </div>
   );
