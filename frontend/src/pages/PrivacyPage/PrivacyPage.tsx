@@ -1,5 +1,6 @@
 import { Layout } from '../../components/Layout/Layout';
 import { SEO } from '../../components/SEO/SEO';
+import { StaticPageStructuredData } from '../../components/SEO/StructuredData';
 import styles from './PrivacyPage.module.css';
 
 export function PrivacyPage() {
@@ -9,6 +10,12 @@ export function PrivacyPage() {
         title="Privacy Policy"
         description="Privacy policy for Do I Need A Brolly - how we handle your data."
         canonicalPath="/privacy"
+      />
+      <StaticPageStructuredData
+        pageType="WebPage"
+        name="Privacy Policy"
+        description="Privacy policy for Do I Need A Brolly - how we handle your data."
+        path="/privacy"
       />
 
       <article className={styles.content}>

@@ -1,5 +1,6 @@
 import { Layout } from '../../components/Layout/Layout';
 import { SEO } from '../../components/SEO/SEO';
+import { StaticPageStructuredData } from '../../components/SEO/StructuredData';
 import styles from './TermsPage.module.css';
 
 export function TermsPage() {
@@ -9,6 +10,12 @@ export function TermsPage() {
         title="Terms of Service"
         description="Terms of service for Do I Need A Brolly - conditions for using our weather forecast service."
         canonicalPath="/terms"
+      />
+      <StaticPageStructuredData
+        pageType="WebPage"
+        name="Terms of Service"
+        description="Terms of service for Do I Need A Brolly - conditions for using our weather forecast service."
+        path="/terms"
       />
 
       <article className={styles.content}>

@@ -3,7 +3,7 @@ import { LocationLinks } from '../../components/LocationLinks/LocationLinks';
 import { KaboolyBanner } from '../../components/KaboolyBanner/KaboolyBanner';
 import { Footer } from '../../components/Footer/Footer';
 import { SEO } from '../../components/SEO/SEO';
-import { WebsiteStructuredData, OrganizationStructuredData } from '../../components/SEO/StructuredData';
+import { WebsiteStructuredData, OrganizationStructuredData, HowToStructuredData } from '../../components/SEO/StructuredData';
 import styles from './HomePage.module.css';
 
 const POPULAR_LOCATIONS = [
@@ -31,6 +31,7 @@ export function HomePage() {
       />
       <WebsiteStructuredData />
       <OrganizationStructuredData />
+      <HowToStructuredData />
 
       <KaboolyBanner />
 

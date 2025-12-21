@@ -14,7 +14,7 @@ import { KaboolyBanner } from '../../components/KaboolyBanner/KaboolyBanner';
 import { SideBanners } from '../../components/SideBanners/SideBanners';
 import { Footer } from '../../components/Footer/Footer';
 import { WeatherSEO } from '../../components/SEO/SEO';
-import { LocationStructuredData } from '../../components/SEO/StructuredData';
+import { LocationStructuredData, WeatherArticleStructuredData } from '../../components/SEO/StructuredData';
 import styles from './WeatherPage.module.css';
 
 export function WeatherPage() {
@@ -78,6 +78,14 @@ export function WeatherPage() {
         lat={location.lat}
         lon={location.lon}
         slug={location.slug}
+      />
+      <WeatherArticleStructuredData
+        locationName={location.name}
+        county={location.county}
+        countySlug={location.countySlug}
+        slug={location.slug}
+        headline={weather.summary.headline}
+        todaySummary={weather.summary.today}
       />
 
       <KaboolyBanner />

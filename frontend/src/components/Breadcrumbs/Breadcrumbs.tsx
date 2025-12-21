@@ -82,3 +82,16 @@ export function WeatherBreadcrumbs({ locationName, county, countySlug, slug }: W
 
   return <Breadcrumbs items={items} />;
 }
+
+interface CountyBreadcrumbsProps {
+  countyName: string;
+  countySlug: string;
+}
+
+export function CountyBreadcrumbs({ countyName, countySlug }: CountyBreadcrumbsProps) {
+  const items: BreadcrumbItem[] = [
+    { label: countyName, href: `/county/${countySlug}` }
+  ];
+
+  return <Breadcrumbs items={items} />;
+}

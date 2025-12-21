@@ -1,5 +1,6 @@
 import { Layout } from '../../components/Layout/Layout';
 import { SEO } from '../../components/SEO/SEO';
+import { StaticPageStructuredData } from '../../components/SEO/StructuredData';
 import styles from './AboutPage.module.css';
 
 export function AboutPage() {
@@ -9,6 +10,12 @@ export function AboutPage() {
         title="About"
         description="Learn about Do I Need A Brolly - plain English weather forecasts for every town and village in the UK."
         canonicalPath="/about"
+      />
+      <StaticPageStructuredData
+        pageType="AboutPage"
+        name="About Do I Need A Brolly"
+        description="Learn about Do I Need A Brolly - plain English weather forecasts for every town and village in the UK."
+        path="/about"
       />
 
       <article className={styles.content}>

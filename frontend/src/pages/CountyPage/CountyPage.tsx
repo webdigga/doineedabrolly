@@ -6,6 +6,7 @@ import { KaboolyBanner } from '../../components/KaboolyBanner/KaboolyBanner';
 import { Footer } from '../../components/Footer/Footer';
 import { SEO } from '../../components/SEO/SEO';
 import { CountyStructuredData } from '../../components/SEO/StructuredData';
+import { CountyBreadcrumbs } from '../../components/Breadcrumbs/Breadcrumbs';
 import styles from './CountyPage.module.css';
 
 export function CountyPage() {
@@ -69,11 +70,7 @@ export function CountyPage() {
       </header>
 
       <main className={styles.main}>
-        <nav className={styles.breadcrumbs}>
-          <Link to="/">Home</Link>
-          <span className={styles.separator}>/</span>
-          <span>{county.name}</span>
-        </nav>
+        <CountyBreadcrumbs countyName={county.name} countySlug={county.slug} />
 
         <div className={styles.countyHeader}>
           <h1 className={styles.countyName}>{county.name} Weather</h1>
