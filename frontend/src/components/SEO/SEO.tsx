@@ -42,6 +42,7 @@ export function SEO({ title, description, canonicalPath }: SEOProps) {
     updateMetaTag('og:image', OG_IMAGE);
     updateMetaTag('og:image:width', '1200');
     updateMetaTag('og:image:height', '630');
+    updateMetaTag('og:image:alt', `${title} - Plain English UK Weather Forecast`);
     if (canonicalPath) {
       updateMetaTag('og:url', `${DOMAIN}${canonicalPath}`);
     }

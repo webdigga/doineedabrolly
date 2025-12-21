@@ -23,7 +23,7 @@ export function HourlyForecast({ hours, title = "Hourly Forecast" }: HourlyForec
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>{title}</h3>
+      <h3 id="hourly-forecast" className={styles.title}>{title}</h3>
       <div className={styles.scrollContainer}>
         <div className={styles.hours}>
           {relevantHours.map((hour) => (

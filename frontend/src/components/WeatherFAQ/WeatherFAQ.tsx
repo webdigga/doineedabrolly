@@ -43,7 +43,7 @@ export function WeatherFAQ({ locationName, weather }: WeatherFAQProps) {
     <>
       <FAQStructuredData faqs={faqs} />
       <section className={styles.section}>
-        <h2 className={styles.title}>Frequently asked questions</h2>
+        <h2 id="faq" className={styles.title}>Frequently asked questions</h2>
         <dl className={styles.list}>
           {faqs.map((faq, index) => (
             <div key={index} className={styles.item}>

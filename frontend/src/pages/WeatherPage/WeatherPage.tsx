@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useLocation } from '../../hooks/useLocation';
 import { useWeather } from '../../hooks/useWeather';
 import { WeatherSummary } from '../../components/WeatherSummary/WeatherSummary';
@@ -16,6 +17,15 @@ import { Footer } from '../../components/Footer/Footer';
 import { WeatherSEO } from '../../components/SEO/SEO';
 import { LocationStructuredData, WeatherArticleStructuredData } from '../../components/SEO/StructuredData';
 import styles from './WeatherPage.module.css';
+
+const POPULAR_LOCATIONS = [
+  { slug: 'london', countySlug: 'greater-london', name: 'London' },
+  { slug: 'manchester', countySlug: 'greater-manchester', name: 'Manchester' },
+  { slug: 'birmingham', countySlug: 'west-midlands', name: 'Birmingham' },
+  { slug: 'edinburgh', countySlug: 'city-of-edinburgh', name: 'Edinburgh' },
+  { slug: 'glasgow', countySlug: 'glasgow-city', name: 'Glasgow' },
+  { slug: 'cardiff', countySlug: 'cardiff', name: 'Cardiff' },
+];
 
 export function WeatherPage() {
   const { slug } = useParams<{ countySlug: string; slug: string }>();
@@ -36,15 +46,7 @@ export function WeatherPage() {
 
   // Location not found
   if (notFound) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.error}>
-          <h1>Location not found</h1>
-          <p>We couldn't find a location called "{slug}".</p>
-          <Link to="/" className={styles.backLink}>Search for a location</Link>
-        </div>
-      </div>
-    );
+    return <LocationNotFound slug={slug} />;
   }
 
   // Error state
@@ -127,6 +129,85 @@ export function WeatherPage() {
             currentSlug={location.slug}
           />
         )}
+      </main>
+
+      <SideBanners />
+      <Footer />
+    </div>
+  );
+}
+
+function LocationNotFound({ slug }: { slug: string | undefined }) {
+  useEffect(() => {
+    // Set noindex for not found pages
+    let robotsMeta = document.querySelector('meta[name="robots"]');
+    if (!robotsMeta) {
+      robotsMeta = document.createElement('meta');
+      robotsMeta.setAttribute('name', 'robots');
+      document.head.appendChild(robotsMeta);
+    }
+    robotsMeta.setAttribute('content', 'noindex');
+
+    document.title = 'Location Not Found | Do I Need A Brolly';
+
+    return () => {
+      robotsMeta?.remove();
+    };
+  }, []);
+
+  // Format the slug for display (replace hyphens with spaces, capitalize)
+  const displayName = slug
+    ? slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+    : 'this location';
+
+  return (
+    <div className={styles.page}>
+      <KaboolyBanner />
+
+      <header className={styles.header}>
+        <div className={styles.headerContent}>
+          <Link to="/" className={styles.logo}>Do I Need A Brolly?</Link>
+          <div className={styles.searchWrapper}>
+            <SearchBox placeholder="Search location..." />
+          </div>
+        </div>
+      </header>
+
+      <main className={styles.main}>
+        <div className={styles.notFound}>
+          <h1>Location not found</h1>
+          <p className={styles.notFoundMessage}>
+            We couldn't find a location called "{displayName}".
+            It might be spelled differently, or try searching for a nearby town.
+          </p>
+
+          <div className={styles.notFoundSearch}>
+            <h2>Search for your location</h2>
+            <p>Find the weather forecast for any town or village in the UK:</p>
+            <div className={styles.notFoundSearchBox}>
+              <SearchBox placeholder="Enter a town or city..." />
+            </div>
+          </div>
+
+          <div className={styles.notFoundPopular}>
+            <h2>Popular locations</h2>
+            <div className={styles.popularLinks}>
+              {POPULAR_LOCATIONS.map((loc) => (
+                <Link
+                  key={loc.slug}
+                  to={`/weather/${loc.countySlug}/${loc.slug}`}
+                  className={styles.popularLink}
+                >
+                  {loc.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <p className={styles.notFoundHome}>
+            Or go back to the <Link to="/">homepage</Link>.
+          </p>
+        </div>
       </main>
 
       <SideBanners />

@@ -10,6 +10,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage/AboutPage').then(m => ({ 
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
 const TermsPage = lazy(() => import('./pages/TermsPage/TermsPage').then(m => ({ default: m.TermsPage })));
 const WeatherRedirect = lazy(() => import('./pages/WeatherRedirect/WeatherRedirect').then(m => ({ default: m.WeatherRedirect })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 function PageLoader() {
   return (
@@ -32,6 +33,7 @@ export function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

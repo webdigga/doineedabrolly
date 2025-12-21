@@ -28,7 +28,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                   {item.label}
                 </Link>
               ) : (
-                <span className={styles.current}>{item.label}</span>
+                <span className={styles.current} aria-current="page">{item.label}</span>
               )}
             </li>
           ))}

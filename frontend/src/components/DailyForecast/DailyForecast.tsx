@@ -13,7 +13,7 @@ export function DailyForecast({ days }: DailyForecastProps) {
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>7-Day Forecast</h3>
+      <h3 id="7-day-forecast" className={styles.title}>7-Day Forecast</h3>
       <div className={styles.days}>
         {days.map((day) => {
           const dayDate = new Date(day.date);

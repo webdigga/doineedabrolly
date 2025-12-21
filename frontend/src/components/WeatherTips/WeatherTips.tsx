@@ -43,7 +43,7 @@ export function WeatherTips({ locationName, current, today }: WeatherTipsProps) 
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.title}>Today's Tips for {locationName}</h2>
+      <h2 id="todays-tips" className={styles.title}>Today's Tips for {locationName}</h2>
 
       <div className={styles.grid}>
         {/* What to Pack */}

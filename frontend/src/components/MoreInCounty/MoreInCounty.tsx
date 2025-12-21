@@ -21,7 +21,7 @@ export function MoreInCounty({ county, countySlug, currentSlug }: MoreInCountyPr
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.title}>More weather in {county}</h2>
+      <h2 id="more-locations" className={styles.title}>More weather in {county}</h2>
       <div className={styles.grid}>
         {displayLocations.map((location) => (
           <Link
