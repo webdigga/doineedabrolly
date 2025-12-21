@@ -244,6 +244,14 @@ function describeWeekend(daily: ForecastDay[]): string {
   return "Sunday drier than Saturday";
 }
 
+// Calculate days between two dates (ignoring time)
+function getDaysDifference(fromDate: Date, toDate: Date): number {
+  const from = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+  const to = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+  const diffMs = to.getTime() - from.getTime();
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
+}
+
 // Find the best day in the forecast
 function findBestDay(daily: ForecastDay[]): string | null {
   if (daily.length < 3) {
@@ -284,6 +292,22 @@ function findBestDay(daily: ForecastDay[]): string | null {
   }
 
   const dayName = getDayName(bestDay.date);
+  const today = new Date();
+  const bestDayDate = new Date(bestDay.date);
+  const daysAway = getDaysDifference(today, bestDayDate);
+
+  // For tomorrow, use "tomorrow" instead of day name
+  if (daysAway === 1) {
+    return "Tomorrow is your best bet";
+  }
+
+  // For days more than 5 days away, prefix with "next" to avoid confusion
+  // (e.g., if today is Friday and best day is next Thursday)
+  if (daysAway > 5) {
+    return `Next ${dayName} looks like the best day`;
+  }
+
+  // For days 2-5 days away, the day name alone is clear enough
   return `${dayName} is your best bet this week`;
 }
 
