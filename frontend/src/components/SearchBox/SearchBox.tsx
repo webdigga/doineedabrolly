@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { navigate } from 'vike/client/router';
 import { useLocationSearch } from '../../hooks/useLocationSearch';
 import type { SearchResult } from '../../types';
 import styles from './SearchBox.module.css';
@@ -10,7 +10,6 @@ interface SearchBoxProps {
 }
 
 export function SearchBox({ autoFocus = false, placeholder = "Search for a town or city..." }: SearchBoxProps) {
-  const navigate = useNavigate();
   const { query, setQuery, results, isLoading } = useLocationSearch();
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -118,7 +117,7 @@ export function SearchBox({ autoFocus = false, placeholder = "Search for a town 
         >
           {results.map((result, index) => (
             <li
-              key={`${result.type}-${result.slug}`}
+              key={result.type === 'county' ? `county-${result.slug}` : `location-${result.countySlug}-${result.slug}`}
               id={`search-option-${index}`}
               className={`${styles.option} ${index === highlightedIndex ? styles.highlighted : ''} ${result.type === 'county' ? styles.countyOption : ''}`}
               onClick={() => handleSelect(result)}

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styles from './LocationLinks.module.css';
 
 interface Location {
@@ -25,16 +24,16 @@ export function LocationLinks({ title, locations, showCounty = false, centered =
       <h2 className={`${styles.title} ${centered ? styles.centered : ''}`}>{title}</h2>
       <div className={`${styles.grid} ${centered ? styles.centered : ''}`}>
         {locations.map((location) => (
-          <Link
+          <a
             key={location.slug}
-            to={`/weather/${location.countySlug}/${location.slug}`}
+            href={`/weather/${location.countySlug}/${location.slug}`}
             className={styles.link}
           >
             {location.name}
             {showCounty && location.county && (
               <span className={styles.county}>, {location.county}</span>
             )}
-          </Link>
+          </a>
         ))}
       </div>
     </section>

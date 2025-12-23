@@ -1,17 +1,18 @@
-import { Link } from 'react-router-dom';
-import { useCountyLocations } from '../../hooks/useCountyLocations';
 import styles from './MoreInCounty.module.css';
+
+interface NearbyLocation {
+  slug: string;
+  name: string;
+}
 
 interface MoreInCountyProps {
   county: string;
   countySlug: string;
-  currentSlug: string;
+  locations: NearbyLocation[];
 }
 
-export function MoreInCounty({ county, countySlug, currentSlug }: MoreInCountyProps) {
-  const { locations, isLoading } = useCountyLocations(countySlug, currentSlug);
-
-  if (isLoading || locations.length === 0) {
+export function MoreInCounty({ county, countySlug, locations }: MoreInCountyProps) {
+  if (locations.length === 0) {
     return null;
   }
 
@@ -24,19 +25,19 @@ export function MoreInCounty({ county, countySlug, currentSlug }: MoreInCountyPr
       <h2 id="more-locations" className={styles.title}>More weather in {county}</h2>
       <div className={styles.grid}>
         {displayLocations.map((location) => (
-          <Link
+          <a
             key={location.slug}
-            to={`/weather/${countySlug}/${location.slug}`}
+            href={`/weather/${countySlug}/${location.slug}`}
             className={styles.link}
           >
             {location.name}
-          </Link>
+          </a>
         ))}
       </div>
       {hasMore && (
-        <Link to={`/county/${countySlug}`} className={styles.viewAll}>
+        <a href={`/county/${countySlug}`} className={styles.viewAll}>
           View all {locations.length} locations in {county} →
-        </Link>
+        </a>
       )}
     </section>
   );

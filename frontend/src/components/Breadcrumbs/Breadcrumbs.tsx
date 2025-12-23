@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styles from './Breadcrumbs.module.css';
 
 const DOMAIN = 'https://doineedabrolly.co.uk';
@@ -24,9 +23,9 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             <li key={index} className={styles.item}>
               {index > 0 && <span className={styles.separator}>/</span>}
               {item.href && index < allItems.length - 1 ? (
-                <Link to={item.href} className={styles.link}>
+                <a href={item.href} className={styles.link}>
                   {item.label}
-                </Link>
+                </a>
               ) : (
                 <span className={styles.current} aria-current="page">{item.label}</span>
               )}

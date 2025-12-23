@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styles from './Footer.module.css';
 
 export function Footer() {
@@ -6,9 +5,9 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles.content}>
         <nav className={styles.nav}>
-          <Link to="/about">About</Link>
-          <Link to="/privacy">Privacy</Link>
-          <Link to="/terms">Terms</Link>
+          <a href="/about">About</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
         </nav>
         <p className={styles.attribution}>
           Weather data from{' '}

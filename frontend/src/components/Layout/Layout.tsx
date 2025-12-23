@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { KaboolyBanner } from '../KaboolyBanner/KaboolyBanner';
 import { SideBanners } from '../SideBanners/SideBanners';
 import { SearchBox } from '../SearchBox/SearchBox';
@@ -17,7 +16,7 @@ export function Layout({ children, showSearch = true }: LayoutProps) {
 
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <Link to="/" className={styles.logo}>Do I Need A Brolly?</Link>
+          <a href="/" className={styles.logo}>Do I Need A Brolly?</a>
           {showSearch && (
             <div className={styles.searchWrapper}>
               <SearchBox placeholder="Search location..." />

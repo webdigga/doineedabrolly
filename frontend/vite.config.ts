@@ -1,9 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import vike from 'vike/plugin';
 import { resolve } from 'path';
+import { config as dotenvConfig } from 'dotenv';
+
+// Load .dev.vars for local development (Cloudflare Workers env file format)
+dotenvConfig({ path: '.dev.vars' });
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), vike()],
   // Wrangler proxies to Vite, so suppress the misleading localhost:5173 message
   logLevel: 'warn',
   resolve: {
