@@ -1,10 +1,31 @@
-# Do I Need My Brolly - Architecture & Development Guide
+# Do I Need A Brolly - Architecture & Development Guide
 
-A high-traffic UK weather website delivering plain English weather forecasts for every town and village in the UK. Built with React + Vite frontend hosted on Cloudflare Pages, with Cloudflare Workers handling API caching and data transformation.
+A high-traffic UK weather website delivering plain English weather forecasts for every town and village in the UK. Built with React + Vike (SSR) deployed to Cloudflare Workers.
 
 **Domain:** doineedabrolly.co.uk
 
 **Purpose:** Generate traffic through SEO-optimised town pages, monetised via Kabooly CRM advertising.
+
+---
+
+## Architecture Template Reference
+
+This project serves as a **reference architecture** for building high-traffic, SEO-focused sites. The stack can be reused for similar projects (traffic sites, football sites, etc.) by:
+
+1. Copying the project structure
+2. Replacing the data layer (locations → teams, routes, etc.)
+3. Updating the API integration
+4. Customising the UI components
+
+Key architectural decisions that make this reusable:
+- **Vike SSR** - Server-side rendering for SEO/AI crawler visibility
+- **Cloudflare Workers** - Edge deployment, global performance
+- **File-based routing** - Easy to understand URL structure
+- **Hono API server** - Lightweight, fast API routes
+- **CSS Modules** - Scoped styling, no conflicts
+- **TypeScript** - Type safety throughout
+
+---
 
 ## AI Assistant Restrictions
 
@@ -31,439 +52,418 @@ The user maintains full control over all deployments and version control. You ma
 
 But you must NEVER execute deployment or git commit operations yourself.
 
-## Project Overview
-
-### The Differentiator
-
-Unlike BBC Weather or Met Office which show data (14°C, 60% precipitation), this site leads with **plain English summaries**:
-
-- "Dry until mid-afternoon, rain from 3pm"
-- "Good morning for the school run, wet by lunch"
-- "Saturday looks better than Sunday"
-- "You'll need your brolly after 2pm"
-
-### Target Keywords
-
-Primary SEO targets (high volume, location-based):
-- "[town] weather tomorrow"
-- "[town] weather this weekend"
-- "[town] weather today"
-- "[town] 7 day forecast"
-- "weather [town]"
-
-### Coverage
-
-All UK locations - approximately 40,000+ towns, villages, and localities. Data sourced from ONS (Office for National Statistics) datasets.
+---
 
 ## Technology Stack
 
-### Frontend
+### Core Framework
 - **React 19** - UI framework
 - **Vite** - Build tool and dev server
+- **Vike** - SSR framework (file-based routing, server-side data fetching)
+- **vike-react** - React integration for Vike
+- **vike-photon** - Cloudflare Workers deployment adapter
 - **TypeScript** - Type safety throughout
-- **React Router v7** - Client-side routing
-- **CSS Modules** - Scoped component styling
-- **PostCSS** - CSS transformations
 
-### Backend / Infrastructure
-- **Cloudflare Pages** - Frontend hosting
-- **Cloudflare Workers** - API proxy, caching, data transformation
-- **Open-Meteo API** - Weather data source (free, no key required)
+### Server & API
+- **Hono** - Lightweight web framework for API routes
+- **Cloudflare Workers** - Edge runtime for SSR and API
+
+### Styling
+- **CSS Modules** - Scoped component styling
+- **CSS Variables** - Design tokens
+
+### Deployment
+- **GitHub Actions** - CI/CD pipeline
+- **Cloudflare Workers** - Production hosting
 
 ### No Database
-
 This is a stateless site. All data comes from:
-1. Static UK location dataset (built into the app)
-2. Open-Meteo API (fetched and cached via Workers)
+1. Static dataset (built into the app)
+2. External API (fetched and cached server-side)
+
+---
 
 ## Project Structure
 
 ```
 doineedabrolly/
-├── frontend/                    # React + Vite application
+├── frontend/
+│   ├── pages/                      # Vike file-based routing
+│   │   ├── +config.ts              # Global Vike config
+│   │   ├── +Layout.tsx             # Root layout component
+│   │   ├── +Head.tsx               # Global head tags (fonts, icons, etc.)
+│   │   ├── index/                  # Homepage (/)
+│   │   │   ├── +Page.tsx
+│   │   │   ├── +Head.tsx
+│   │   │   └── +prerender.ts
+│   │   ├── about/                  # Static page (/about)
+│   │   │   ├── +Page.tsx
+│   │   │   ├── +Head.tsx
+│   │   │   └── +prerender.ts
+│   │   ├── county/
+│   │   │   └── @countySlug/        # Dynamic route (/county/:countySlug)
+│   │   │       ├── +Page.tsx
+│   │   │       ├── +Head.tsx
+│   │   │       └── +data.ts        # Server-side data fetching
+│   │   ├── weather/
+│   │   │   └── @countySlug/
+│   │   │       └── @slug/          # Dynamic route (/weather/:countySlug/:slug)
+│   │   │           ├── +Page.tsx
+│   │   │           ├── +Head.tsx
+│   │   │           └── +data.ts
+│   │   └── _error/                 # Error page
+│   │       ├── +Page.tsx
+│   │       └── +Head.tsx
+│   │
+│   ├── server/                     # Hono API server
+│   │   └── index.ts                # API routes + Vike middleware
+│   │
+│   ├── functions/                  # Shared business logic
+│   │   └── _shared/
+│   │       ├── types.ts            # TypeScript types
+│   │       ├── ukLocations.ts      # Static location data
+│   │       ├── weatherService.ts   # Weather API service
+│   │       ├── weatherApi.ts       # API client
+│   │       ├── plainEnglish.ts     # Data-to-text rules engine
+│   │       ├── weatherCodes.ts     # Weather code mappings
+│   │       └── cache.ts            # Caching utilities
+│   │
 │   ├── src/
-│   │   ├── components/          # Reusable React components
+│   │   ├── components/             # Reusable React components
 │   │   │   └── ComponentName/
 │   │   │       ├── ComponentName.tsx
 │   │   │       └── ComponentName.module.css
-│   │   ├── pages/               # Page components (routed)
+│   │   ├── hooks/                  # Client-side React hooks
+│   │   │   └── useLocationSearch.ts
+│   │   ├── utils/                  # Client-side utilities
+│   │   │   └── weather.ts
+│   │   ├── pages/                  # CSS modules for pages (legacy)
 │   │   │   └── PageName/
-│   │   │       ├── PageName.tsx
 │   │   │       └── PageName.module.css
-│   │   ├── hooks/               # Custom React hooks
-│   │   ├── services/            # API service layer
-│   │   │   ├── weatherService.ts      # Weather API abstraction
-│   │   │   └── weatherProviders/
-│   │   │       └── openMeteo.ts       # Open-Meteo implementation
-│   │   ├── utils/               # Utility functions
-│   │   │   ├── plainEnglish.ts        # Weather-to-text rules engine
-│   │   │   └── logger.ts
-│   │   ├── data/                # Static data
-│   │   │   └── ukLocations.ts         # UK towns/villages dataset
-│   │   ├── types/               # TypeScript type definitions
-│   │   ├── styles/              # Global styles
-│   │   │   ├── variables.css          # Design tokens
-│   │   │   └── global.css             # Global element styles
-│   │   ├── config.ts            # Environment configuration
-│   │   ├── App.tsx              # Root routing component
-│   │   ├── main.tsx             # Entry point
-│   │   └── index.css            # Main CSS entry point
-│   ├── public/
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   └── package.json
-│
-├── worker/                      # Cloudflare Workers API
-│   ├── src/
-│   │   ├── index.ts             # Main entry point, route registration
-│   │   ├── routes/
-│   │   │   └── weather.ts       # Weather API endpoints
-│   │   ├── services/
-│   │   │   ├── weatherService.ts
-│   │   │   └── providers/
-│   │   │       └── openMeteo.ts
-│   │   ├── utils/
-│   │   │   ├── cache.ts         # Caching logic
-│   │   │   ├── response.ts      # Response helpers
-│   │   │   └── plainEnglish.ts  # Weather-to-text (shared logic)
-│   │   └── types/
-│   │       └── index.ts
-│   ├── wrangler.toml
+│   │   ├── styles/
+│   │   │   ├── variables.css       # Design tokens
+│   │   │   └── global.css          # Global styles
+│   │   └── index.css               # CSS entry point
+│   │
+│   ├── public/                     # Static assets
+│   │   ├── sitemap.xml
+│   │   ├── sitemap-locations-*.xml
+│   │   ├── manifest.json
+│   │   └── favicon.ico
+│   │
+│   ├── wrangler.jsonc              # Cloudflare Workers config
+│   ├── vite.config.ts              # Vite configuration
 │   ├── tsconfig.json
 │   └── package.json
 │
-├── scripts/                     # Utility scripts
-│   └── generateLocations.ts     # Process ONS data into location dataset
+├── .github/
+│   └── workflows/
+│       └── deploy.yml              # GitHub Actions deployment
 │
-├── CLAUDE.md                    # This file
+├── CLAUDE.md                       # This file
 └── README.md
 ```
 
-## URL Structure & Routing
+---
 
-### Frontend Routes
+## Vike File-Based Routing
 
-**Location Pages (SEO landing pages):**
-```
-/weather/:town                    # Town page (e.g., /weather/taunton)
-/weather/:county                  # County overview (e.g., /weather/somerset)
-/weather/:county/:town            # Disambiguation (e.g., /weather/somerset/taunton)
-```
+### Route Files
 
-**Time-based Views (same page, different sections/tabs):**
-```
-/weather/taunton                  # Default: today + tomorrow
-/weather/taunton/today            # Today detailed
-/weather/taunton/tomorrow         # Tomorrow detailed
-/weather/taunton/weekend          # Saturday + Sunday
-/weather/taunton/7-day            # Week ahead
-/weather/taunton/14-day           # Two weeks (if API supports)
-```
+| File | Purpose |
+|------|---------|
+| `+Page.tsx` | React component for the page |
+| `+Head.tsx` | Meta tags, title, Open Graph, etc. |
+| `+data.ts` | Server-side data fetching (runs on every request) |
+| `+prerender.ts` | Enable static pre-rendering |
+| `+guard.ts` | Route guards (redirects, auth) |
+| `+config.ts` | Route-specific configuration |
+| `+Layout.tsx` | Layout wrapper component |
 
-**Static Pages:**
+### Dynamic Routes
+
+Use `@param` syntax for dynamic segments:
 ```
-/                                 # Homepage (location search/detect)
-/about                            # About the site
-/privacy                          # Privacy policy
-/terms                            # Terms of service
+pages/weather/@countySlug/@slug/+Page.tsx
+→ /weather/:countySlug/:slug
+→ /weather/somerset/taunton
 ```
 
-### Worker API Routes
-
-```
-GET /api/weather/:lat/:lon        # Weather by coordinates
-    ?days=7                       # Number of days (1-14)
-    
-GET /api/location/search          # Location search
-    ?q=taun                       # Search query
-    
-GET /api/location/:slug           # Get location details by slug
+Access params in `+data.ts`:
+```typescript
+export async function data(pageContext: PageContextServer) {
+  const { countySlug, slug } = pageContext.routeParams;
+  // Fetch data...
+}
 ```
 
-## Weather API Abstraction
-
-The weather service is abstracted to allow easy switching between providers.
-
-### Interface
+### Server-Side Data Fetching
 
 ```typescript
-// types/weather.ts
-interface WeatherProvider {
-  getCurrentWeather(lat: number, lon: number): Promise<CurrentWeather>;
-  getForecast(lat: number, lon: number, days: number): Promise<Forecast>;
+// pages/weather/@countySlug/@slug/+data.ts
+import type { PageContextServer } from 'vike/types';
+
+export interface WeatherPageData {
+  location: Location;
+  weather: WeatherResponse;
 }
 
-interface CurrentWeather {
-  temperature: number;           // Celsius
-  feelsLike: number;
-  humidity: number;              // Percentage
-  windSpeed: number;             // km/h
-  windDirection: number;         // Degrees
-  uvIndex: number;
-  weatherCode: number;           // WMO standard codes
-  isDay: boolean;
-}
+export async function data(pageContext: PageContextServer): Promise<WeatherPageData> {
+  const { countySlug, slug } = pageContext.routeParams;
 
-interface ForecastDay {
-  date: string;                  // ISO date
-  sunrise: string;               // ISO datetime
-  sunset: string;
-  temperatureMax: number;
-  temperatureMin: number;
-  precipitationProbability: number;
-  precipitationSum: number;      // mm
-  weatherCode: number;
-  uvIndexMax: number;
-  hourly: HourlyForecast[];
-}
+  // Fetch from database/API
+  const location = await getLocation(countySlug, slug);
+  const weather = await getWeather(location.lat, location.lon);
 
-interface HourlyForecast {
-  time: string;                  // ISO datetime
-  temperature: number;
-  precipitationProbability: number;
-  precipitation: number;
-  weatherCode: number;
-  windSpeed: number;
-  isDay: boolean;
-}
-
-interface Forecast {
-  location: {
-    lat: number;
-    lon: number;
-    timezone: string;
-  };
-  current: CurrentWeather;
-  daily: ForecastDay[];
+  return { location, weather };
 }
 ```
 
-### Open-Meteo Implementation
+Use data in page component:
+```typescript
+// pages/weather/@countySlug/@slug/+Page.tsx
+import { useData } from 'vike-react/useData';
+import type { WeatherPageData } from './+data';
+
+export default function Page() {
+  const { location, weather } = useData<WeatherPageData>();
+  return <div>...</div>;
+}
+```
+
+---
+
+## Hono API Server
+
+The server handles both API routes and Vike SSR:
 
 ```typescript
-// services/weatherProviders/openMeteo.ts
-const OPEN_METEO_BASE = 'https://api.open-meteo.com/v1/forecast';
+// server/index.ts
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { apply, serve } from '@photonjs/hono';
 
-export async function getForecast(lat: number, lon: number, days: number): Promise<Forecast> {
-  const params = new URLSearchParams({
-    latitude: lat.toString(),
-    longitude: lon.toString(),
-    current: 'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,is_day',
-    hourly: 'temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,is_day',
-    daily: 'sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,weather_code,uv_index_max',
-    timezone: 'Europe/London',
-    forecast_days: days.toString(),
+function startServer() {
+  const app = new Hono();
+
+  // CORS for API routes
+  app.use('/api/*', cors());
+
+  // API routes
+  app.get('/api/location/search', (c) => {
+    const query = c.req.query('q');
+    // Search logic...
+    return c.json({ results });
   });
 
-  const response = await fetch(`${OPEN_METEO_BASE}?${params}`);
-  const data = await response.json();
-  
-  return transformOpenMeteoResponse(data);
+  app.get('/api/location/:slug', (c) => {
+    const slug = c.req.param('slug');
+    // Lookup logic...
+    return c.json(location);
+  });
+
+  // Vike SSR middleware (handles all non-API routes)
+  apply(app);
+
+  return serve(app);
 }
+
+export default startServer();
 ```
 
-### Switching Providers
+---
 
-To switch to a different provider (e.g., OpenWeatherMap):
+## SEO Implementation
 
-1. Create new file: `services/weatherProviders/openWeatherMap.ts`
-2. Implement the same interface
-3. Update `services/weatherService.ts` to use new provider
-4. No changes needed to components or pages
+### Meta Tags (+Head.tsx)
 
-## Plain English Rules Engine
-
-The core differentiator - converting weather data into human-readable summaries.
-
-### Location
-
-```
-/frontend/src/utils/plainEnglish.ts
-/worker/src/utils/plainEnglish.ts    # Shared logic, can be identical
-```
-
-### Rules Structure
+Each page has its own `+Head.tsx` for dynamic meta tags:
 
 ```typescript
-interface PlainEnglishSummary {
-  headline: string;              // "You'll need your brolly this afternoon"
-  today: string;                 // "Dry this morning, rain arriving around 2pm"
-  tomorrow: string;              // "A wet start, brightening up by lunchtime"
-  weekend: string;               // "Saturday looks better than Sunday"
-  bestDay: string | null;        // "Wednesday is your best bet this week"
-}
+// pages/weather/@countySlug/@slug/+Head.tsx
+import { useData } from 'vike-react/useData';
+import type { WeatherPageData } from './+data';
 
-function generateSummary(forecast: Forecast): PlainEnglishSummary {
-  // Implementation
+export function Head() {
+  const { location, weather } = useData<WeatherPageData>();
+
+  const title = `${location.name} Weather - Today & 7 Day Forecast`;
+  const description = `${location.name} weather: ${weather.summary.headline}`;
+  const url = `https://example.com/weather/${location.countySlug}/${location.slug}`;
+
+  return (
+    <>
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      <link rel="canonical" href={url} />
+
+      {/* Open Graph */}
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={url} />
+      <meta property="og:image" content="https://example.com/og-image.png" />
+
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+    </>
+  );
 }
 ```
 
-### Example Rules
+### JSON-LD Structured Data
+
+Structured data components render `<script type="application/ld+json">`:
 
 ```typescript
-// Rain timing
-function describeRainTiming(hourly: HourlyForecast[]): string {
-  const rainHours = hourly.filter(h => h.precipitationProbability > 50);
-  
-  if (rainHours.length === 0) {
-    return "Staying dry all day";
+// src/components/SEO/StructuredData.tsx
+export function LocationStructuredData({ location }) {
+  useEffect(() => {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: `${location.name} Weather`,
+      mainEntity: {
+        '@type': 'Place',
+        name: location.name,
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: location.lat,
+          longitude: location.lon,
+        },
+      },
+    };
+    // Inject into document head...
+  }, []);
+  return null;
+}
+```
+
+Types of structured data used:
+- `WebPage` - For all pages
+- `Place` + `GeoCoordinates` - For location pages
+- `Article` - For weather content
+- `FAQPage` - For FAQ sections
+- `BreadcrumbList` - For navigation
+- `Organization` - For site identity
+- `HowTo` - For instructional content
+
+### Sitemaps
+
+Static XML sitemaps in `/public/`:
+- `sitemap.xml` - Index sitemap
+- `sitemap-locations-1.xml` through `sitemap-locations-5.xml` - Location pages
+
+---
+
+## Deployment
+
+### Cloudflare Workers Configuration
+
+```jsonc
+// wrangler.jsonc
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "doineedabrolly",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "virtual:photon:cloudflare:server-entry"
+}
+```
+
+### GitHub Actions Workflow
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+      - name: Deploy
+        working-directory: frontend
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+```
+
+### Environment Variables
+
+**Local development (`.dev.vars`):**
+```
+WEATHER_API_KEY=your_api_key_here
+```
+
+**Production (Cloudflare dashboard):**
+- Add secrets in Workers & Pages → Settings → Variables and Secrets
+
+Access in code:
+```typescript
+// In +data.ts (server-side)
+async function getApiKey(): Promise<string | undefined> {
+  try {
+    const cfWorkers = await import('cloudflare:workers');
+    if (cfWorkers.env?.WEATHER_API_KEY) {
+      return cfWorkers.env.WEATHER_API_KEY;
+    }
+  } catch {
+    // Not in Cloudflare runtime
   }
-  
-  const firstRain = rainHours[0];
-  const hour = new Date(firstRain.time).getHours();
-  
-  if (hour < 9) return "A wet start to the day";
-  if (hour < 12) return "Rain arriving mid-morning";
-  if (hour < 14) return "Rain expected around lunchtime";
-  if (hour < 17) return "Rain this afternoon";
-  if (hour < 20) return "Rain arriving this evening";
-  return "Rain expected overnight";
-}
-
-// Temperature feel
-function describeTemperature(temp: number): string {
-  if (temp < 0) return "freezing";
-  if (temp < 5) return "very cold";
-  if (temp < 10) return "cold";
-  if (temp < 15) return "cool";
-  if (temp < 20) return "mild";
-  if (temp < 25) return "warm";
-  if (temp < 30) return "hot";
-  return "very hot";
-}
-
-// Headline generation
-function generateHeadline(forecast: Forecast): string {
-  const today = forecast.daily[0];
-  const rainProb = today.precipitationProbability;
-  
-  if (rainProb > 70) {
-    return "You'll definitely need your brolly today";
-  }
-  if (rainProb > 40) {
-    return "Pack your brolly just in case";
-  }
-  if (rainProb > 20) {
-    return "Probably won't need your brolly";
-  }
-  return "Leave the brolly at home";
+  return process.env.WEATHER_API_KEY;
 }
 ```
 
-### Weather Codes (WMO Standard)
+---
 
-Open-Meteo uses WMO weather codes. Map these to plain English:
+## Build & Development Commands
 
-```typescript
-const weatherDescriptions: Record<number, string> = {
-  0: 'clear skies',
-  1: 'mainly clear',
-  2: 'partly cloudy',
-  3: 'overcast',
-  45: 'foggy',
-  48: 'freezing fog',
-  51: 'light drizzle',
-  53: 'drizzle',
-  55: 'heavy drizzle',
-  61: 'light rain',
-  63: 'rain',
-  65: 'heavy rain',
-  71: 'light snow',
-  73: 'snow',
-  75: 'heavy snow',
-  77: 'snow grains',
-  80: 'light showers',
-  81: 'showers',
-  82: 'heavy showers',
-  85: 'light snow showers',
-  86: 'snow showers',
-  95: 'thunderstorm',
-  96: 'thunderstorm with hail',
-  99: 'severe thunderstorm with hail',
-};
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Development server (uses wrangler for Workers runtime)
+npm run dev
+
+# Type check
+npm run typecheck
+
+# Lint
+npm run lint
+
+# Production build
+npm run build
+
+# Generate sitemap
+npm run generate:sitemap
 ```
 
-## Caching Strategy
-
-### Worker-Level Caching
-
-Weather data cached in Cloudflare Workers KV or Cache API.
-
-```typescript
-// Cache keys
-const cacheKey = `weather:${lat}:${lon}:${days}`;
-
-// Cache duration
-const CACHE_TTL = 15 * 60; // 15 minutes
-
-// Implementation
-async function getCachedWeather(lat: number, lon: number, days: number, cache: KVNamespace): Promise<Forecast | null> {
-  const key = `weather:${lat.toFixed(2)}:${lon.toFixed(2)}:${days}`;
-  const cached = await cache.get(key, 'json');
-  return cached as Forecast | null;
-}
-
-async function setCachedWeather(lat: number, lon: number, days: number, data: Forecast, cache: KVNamespace): Promise<void> {
-  const key = `weather:${lat.toFixed(2)}:${lon.toFixed(2)}:${days}`;
-  await cache.put(key, JSON.stringify(data), { expirationTtl: CACHE_TTL });
-}
-```
-
-### Cache Invalidation
-
-- TTL-based: 15 minutes for weather data
-- Coordinates rounded to 2 decimal places (approximately 1km precision) to increase cache hits
-
-### Frontend Caching
-
-- React Query or SWR for client-side caching (optional)
-- Service worker for offline support (phase 2)
-
-## UK Locations Data
-
-### Data Source
-
-Office for National Statistics (ONS) provides free datasets:
-- OS Open Names
-- Index of Place Names
-
-### Data Structure
-
-```typescript
-// data/ukLocations.ts
-interface Location {
-  slug: string;                  // URL-friendly: "taunton"
-  name: string;                  // Display: "Taunton"
-  county: string;                // "Somerset"
-  countySlug: string;            // "somerset"
-  lat: number;
-  lon: number;
-  population?: number;           // For sorting/priority
-}
-
-// Export as searchable array
-export const ukLocations: Location[] = [
-  { slug: 'taunton', name: 'Taunton', county: 'Somerset', countySlug: 'somerset', lat: 51.0147, lon: -3.1029 },
-  // ... 40,000+ entries
-];
-
-// Indexes for fast lookup
-export const locationsBySlug: Map<string, Location> = new Map();
-export const locationsByCounty: Map<string, Location[]> = new Map();
-```
-
-### Search Implementation
-
-```typescript
-// Simple prefix search for autocomplete
-function searchLocations(query: string, limit = 10): Location[] {
-  const normalised = query.toLowerCase().trim();
-  return ukLocations
-    .filter(loc => loc.name.toLowerCase().startsWith(normalised))
-    .sort((a, b) => (b.population || 0) - (a.population || 0))
-    .slice(0, limit);
-}
-```
+---
 
 ## CSS Architecture
 
@@ -473,529 +473,149 @@ function searchLocations(query: string, limit = 10): Location[] {
 
 ```css
 /* Base styles are mobile */
-.container {
-  padding: var(--space-4);
-}
+.container { padding: var(--space-4); }
 
 /* Tablet and up */
 @media (min-width: 768px) {
-  .container {
-    padding: var(--space-6);
-  }
+  .container { padding: var(--space-6); }
 }
 
 /* Desktop and up */
 @media (min-width: 1024px) {
-  .container {
-    padding: var(--space-8);
-  }
+  .container { padding: var(--space-8); }
 }
 ```
 
 ### Design Tokens
 
-```css
-/* styles/variables.css */
-:root {
-  /* Colors - Light theme (weather sites should be bright/readable) */
-  --color-primary: #0066cc;
-  --color-primary-dark: #0052a3;
-  --color-primary-light: #3399ff;
-  
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f5f7fa;
-  --color-bg-tertiary: #e8ecf1;
-  
-  --color-text-primary: #1a1a2e;
-  --color-text-secondary: #4a5568;
-  --color-text-tertiary: #718096;
-  
-  --color-border: #e2e8f0;
-  
-  /* Weather-specific colors */
-  --color-rain: #4a90d9;
-  --color-sun: #f6ad55;
-  --color-cloud: #a0aec0;
-  --color-snow: #e2e8f0;
-  --color-thunder: #805ad5;
-  
-  /* Status */
-  --color-success: #48bb78;
-  --color-warning: #ed8936;
-  --color-danger: #f56565;
-  
-  /* Spacing (8px base) */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-  --space-16: 64px;
-  
-  /* Typography */
-  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: var(--font-body);
-  
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  
-  /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
-  
-  /* Breakpoints (for reference - use in media queries) */
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  
-  /* Z-Index Scale */
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-fixed: 300;
-  --z-modal-overlay: 1000;
-  --z-modal: 1001;
-  --z-tooltip: 1100;
-}
-```
+See `src/styles/variables.css` for:
+- Colors (primary, background, text, status)
+- Spacing scale (4px base)
+- Typography (sizes, weights, line heights)
+- Border radius
+- Shadows
+- Z-index scale
+- Breakpoints
 
 ### CSS Modules Pattern
 
-Each component has its own `.module.css` file:
-
 ```tsx
-// components/WeatherCard/WeatherCard.tsx
-import styles from './WeatherCard.module.css';
-
-export function WeatherCard({ temperature, description }: WeatherCardProps) {
-  return (
-    <div className={styles.card}>
-      <span className={styles.temperature}>{temperature}°</span>
-      <span className={styles.description}>{description}</span>
-    </div>
-  );
+// Component.tsx
+import styles from './Component.module.css';
+export function Component() {
+  return <div className={styles.container}>...</div>;
 }
 ```
 
-```css
-/* components/WeatherCard/WeatherCard.module.css */
-.card {
-  background: var(--color-bg-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-md);
-}
-
-.temperature {
-  font-size: var(--text-4xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-}
-
-.description {
-  font-size: var(--text-lg);
-  color: var(--color-text-secondary);
-}
-```
-
-## TypeScript Configuration
-
-### Frontend (`frontend/tsconfig.json`)
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@pages/*": ["src/pages/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"],
-      "@data/*": ["src/data/*"],
-      "@styles/*": ["src/styles/*"]
-    }
-  },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
-}
-```
-
-### Worker (`worker/tsconfig.json`)
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "skipLibCheck": true,
-    "types": ["@cloudflare/workers-types"],
-    "baseUrl": ".",
-    "paths": {
-      "@routes/*": ["src/routes/*"],
-      "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"]
-    }
-  },
-  "include": ["src"]
-}
-```
+---
 
 ## Component Patterns
 
-### Page Component
+### Page Component (Vike)
 
 ```tsx
-// pages/WeatherPage/WeatherPage.tsx
-import { useParams } from 'react-router-dom';
-import { useWeather } from '@hooks/useWeather';
-import { useLocation } from '@hooks/useLocation';
-import { WeatherSummary } from '@components/WeatherSummary/WeatherSummary';
-import { HourlyForecast } from '@components/HourlyForecast/HourlyForecast';
-import { DailyForecast } from '@components/DailyForecast/DailyForecast';
-import { KaboolyBanner } from '@components/KaboolyBanner/KaboolyBanner';
-import styles from './WeatherPage.module.css';
+// pages/weather/@countySlug/@slug/+Page.tsx
+import { useData } from 'vike-react/useData';
+import type { WeatherPageData } from './+data';
+import { WeatherSummary } from '@/components/WeatherSummary/WeatherSummary';
 
-export function WeatherPage() {
-  const { town } = useParams<{ town: string }>();
-  const { location, loading: locationLoading } = useLocation(town);
-  const { forecast, loading: weatherLoading, error } = useWeather(location?.lat, location?.lon);
-
-  if (locationLoading || weatherLoading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error || !location || !forecast) {
-    return <ErrorMessage message="Could not load weather data" />;
-  }
+export default function Page() {
+  const { location, weather } = useData<WeatherPageData>();
 
   return (
-    <div className={styles.page}>
-      <KaboolyBanner />
-      
-      <header className={styles.header}>
-        <h1>{location.name} Weather</h1>
-        <p className={styles.county}>{location.county}</p>
-      </header>
-
-      <WeatherSummary forecast={forecast} />
-      <HourlyForecast hours={forecast.daily[0].hourly} />
-      <DailyForecast days={forecast.daily} />
+    <div>
+      <h1>{location.name} Weather</h1>
+      <WeatherSummary summary={weather.summary} />
     </div>
   );
 }
 ```
 
-### Custom Hook
+### Client-Side Navigation
 
 ```tsx
-// hooks/useWeather.ts
-import { useState, useEffect } from 'react';
-import { getWeather } from '@services/weatherService';
-import type { Forecast } from '@types/weather';
+import { navigate } from 'vike/client/router';
 
-interface UseWeatherResult {
-  forecast: Forecast | null;
-  loading: boolean;
-  error: string | null;
+function handleClick() {
+  navigate('/weather/somerset/taunton');
 }
+```
 
-export function useWeather(lat?: number, lon?: number): UseWeatherResult {
-  const [forecast, setForecast] = useState<Forecast | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+### Client-Side Hooks
+
+Hooks that fetch data client-side (e.g., for search):
+
+```tsx
+// hooks/useLocationSearch.ts
+export function useLocationSearch() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
-    if (lat === undefined || lon === undefined) {
-      setLoading(false);
-      return;
-    }
+    if (query.length < 2) return;
+    fetch(`/api/location/search?q=${query}`)
+      .then(res => res.json())
+      .then(data => setResults(data.results));
+  }, [query]);
 
-    async function fetchWeather() {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getWeather(lat, lon, 7);
-        setForecast(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch weather');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchWeather();
-  }, [lat, lon]);
-
-  return { forecast, loading, error };
+  return { query, setQuery, results };
 }
 ```
 
-### Reusable Component
-
-```tsx
-// components/WeatherIcon/WeatherIcon.tsx
-import styles from './WeatherIcon.module.css';
-
-interface WeatherIconProps {
-  code: number;
-  isDay: boolean;
-  size?: 'sm' | 'md' | 'lg';
-}
-
-export function WeatherIcon({ code, isDay, size = 'md' }: WeatherIconProps) {
-  const iconName = getIconForCode(code, isDay);
-  
-  return (
-    <span className={`${styles.icon} ${styles[size]}`} aria-hidden="true">
-      {iconName}
-    </span>
-  );
-}
-
-function getIconForCode(code: number, isDay: boolean): string {
-  // Map WMO codes to icons/emojis
-  if (code === 0) return isDay ? '☀️' : '🌙';
-  if (code <= 3) return isDay ? '⛅' : '☁️';
-  if (code <= 48) return '🌫️';
-  if (code <= 55) return '🌧️';
-  if (code <= 65) return '🌧️';
-  if (code <= 77) return '🌨️';
-  if (code <= 82) return '🌦️';
-  if (code <= 86) return '🌨️';
-  return '⛈️';
-}
-```
-
-## Kabooly Advertising
-
-### Banner Placement
-
-Fixed banner at top of every page, below navigation.
-
-```tsx
-// components/KaboolyBanner/KaboolyBanner.tsx
-import styles from './KaboolyBanner.module.css';
-
-export function KaboolyBanner() {
-  return (
-    <a 
-      href="https://kabooly.com/crm/how-it-works/?utm_source=doineedabrolly&utm_medium=banner&utm_campaign=weather"
-      target="_blank"
-      rel="noopener"
-      className={styles.banner}
-    >
-      <span className={styles.text}>
-        Need a CRM? Try Kabooly - simple, powerful, and refreshingly easy to use
-      </span>
-      <span className={styles.cta}>Learn more →</span>
-    </a>
-  );
-}
-```
-
-```css
-/* components/KaboolyBanner/KaboolyBanner.module.css */
-.banner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-4);
-  background: var(--color-primary);
-  color: white;
-  padding: var(--space-3) var(--space-4);
-  text-decoration: none;
-  font-size: var(--text-sm);
-}
-
-.banner:hover {
-  background: var(--color-primary-dark);
-}
-
-.text {
-  flex: 1;
-  text-align: center;
-}
-
-.cta {
-  font-weight: var(--font-weight-semibold);
-  white-space: nowrap;
-}
-
-@media (min-width: 768px) {
-  .banner {
-    padding: var(--space-4) var(--space-6);
-    font-size: var(--text-base);
-  }
-}
-```
-
-### UTM Parameters
-
-All Kabooly links should include tracking:
-- `utm_source=doineedabrolly`
-- `utm_medium=banner`
-- `utm_campaign=weather`
-
-## SEO Considerations
-
-### Page Titles
-
-```
-{Town} Weather - Today, Tomorrow & 7 Day Forecast | Do I Need My Brolly
-```
-
-### Meta Descriptions
-
-Dynamic based on current weather:
-```
-{Town} weather: {headline}. Get the plain English forecast for today, tomorrow and the week ahead.
-```
-
-### Structured Data
-
-Include JSON-LD for weather:
-```json
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "Taunton Weather Forecast",
-  "description": "Plain English weather forecast for Taunton, Somerset",
-  "mainEntity": {
-    "@type": "Place",
-    "name": "Taunton",
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 51.0147,
-      "longitude": -3.1029
-    }
-  }
-}
-```
-
-### Sitemap
-
-Generate sitemap.xml with all location pages:
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://doineedabrolly.co.uk/weather/somerset/taunton</loc>
-    <changefreq>hourly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <!-- ... all locations -->
-</urlset>
-```
-
-## Build & Development Commands
-
-### Frontend
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Development server (http://localhost:5173)
-npm run dev
-
-# Type check
-npm run typecheck
-
-# Lint
-npm run lint
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-### Worker
-
-```bash
-cd worker
-
-# Install dependencies
-npm install
-
-# Local development
-npm run dev
-
-# Type check
-npm run typecheck
-```
+---
 
 ## File Naming Conventions
 
 | Type | Extension | Example |
 |------|-----------|---------|
+| Vike pages | `+Page.tsx` | `pages/about/+Page.tsx` |
+| Vike head | `+Head.tsx` | `pages/about/+Head.tsx` |
+| Vike data | `+data.ts` | `pages/weather/@slug/+data.ts` |
 | React components | `.tsx` | `WeatherCard.tsx` |
-| Hooks | `.ts` | `useWeather.ts` |
+| Hooks | `.ts` | `useLocationSearch.ts` |
 | Utilities | `.ts` | `plainEnglish.ts` |
-| Types | `.ts` | `weather.ts` |
+| Types | `.ts` | `types.ts` |
 | Styles | `.module.css` | `WeatherCard.module.css` |
-| Tests | `.test.ts` / `.test.tsx` | `useWeather.test.ts` |
+
+---
+
+## Key Patterns for Reuse
+
+When creating a new project based on this architecture:
+
+1. **Copy the structure** - `pages/`, `server/`, `functions/_shared/`, `src/components/`
+
+2. **Update Vike config** - `pages/+config.ts`:
+   ```typescript
+   import vikeReact from 'vike-react/config';
+   import vikePhoton from 'vike-photon/config';
+
+   export default {
+     extends: [vikeReact, vikePhoton],
+     ssr: true,
+     prerender: false,
+     photon: { server: 'server/index.ts' },
+   };
+   ```
+
+3. **Replace data layer** - Update `functions/_shared/` with your domain data
+
+4. **Update API routes** - Modify `server/index.ts` for your API needs
+
+5. **Create page routes** - Add folders in `pages/` for your URL structure
+
+6. **Update deployment** - Change worker name in `wrangler.jsonc`
+
+---
 
 ## Development Tips
 
-1. **No database** - Keep it simple, all state from API or static data
-2. **Cache aggressively** - Weather doesn't change every second
-3. **Mobile-first** - Most weather checks are on phones
-4. **Plain English first** - Lead with the summary, details below
-5. **Fast loading** - Users want quick answers, optimize bundle size
-6. **SEO is king** - This is a traffic play, every page should be optimised
+1. **SSR-first** - Data fetching happens server-side in `+data.ts`
+2. **No client-side routing for SEO pages** - Let Vike handle navigation
+3. **Cache aggressively** - Use HTTP cache headers in API responses
+4. **Mobile-first CSS** - Always use `min-width` media queries
+5. **Plain English first** - Lead with human-readable summaries
+6. **SEO is king** - Every page needs proper meta tags and structured data
 
 ---
 
