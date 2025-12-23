@@ -1,4 +1,4 @@
-import type { PlainEnglishSummary } from '../../types';
+import type { PlainEnglishSummary } from '../../../functions/_shared/types';
 import styles from './WeatherSummary.module.css';
 
 interface WeatherSummaryProps {

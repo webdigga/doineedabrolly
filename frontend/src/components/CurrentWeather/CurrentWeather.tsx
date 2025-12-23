@@ -1,4 +1,4 @@
-import type { CurrentWeather as CurrentWeatherType } from '../../types';
+import type { CurrentWeather as CurrentWeatherType } from '../../../functions/_shared/types';
 import { getWeatherIcon, getWeatherDescription, formatTemp } from '../../utils/weather';
 import styles from './CurrentWeather.module.css';
 

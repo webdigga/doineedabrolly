@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { navigate } from 'vike/client/router';
 import { useLocationSearch } from '../../hooks/useLocationSearch';
-import type { SearchResult } from '../../types';
+import type { SearchResult } from '../../../functions/_shared/types';
 import styles from './SearchBox.module.css';
 
 interface SearchBoxProps {

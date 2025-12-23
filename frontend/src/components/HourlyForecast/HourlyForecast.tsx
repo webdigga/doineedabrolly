@@ -1,4 +1,4 @@
-import type { HourlyForecast as HourlyForecastType } from '../../types';
+import type { HourlyForecast as HourlyForecastType } from '../../../functions/_shared/types';
 import { getWeatherIcon, formatTemp, formatHour } from '../../utils/weather';
 import styles from './HourlyForecast.module.css';
 

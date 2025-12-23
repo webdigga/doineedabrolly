@@ -1,4 +1,4 @@
-import type { ForecastDay } from '../../types';
+import type { ForecastDay } from '../../../functions/_shared/types';
 import { getWeatherIcon, getWeatherDescription, formatTemp, formatDayName, getRemainingWeatherCode, getRemainingMaxPrecipitation } from '../../utils/weather';
 import styles from './DailyForecast.module.css';
 

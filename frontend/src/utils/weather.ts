@@ -1,55 +1,70 @@
-/**
- * WMO Weather code descriptions
- */
-export const weatherDescriptions: Record<number, string> = {
-  0: 'Clear',
-  1: 'Mainly clear',
-  2: 'Partly cloudy',
-  3: 'Overcast',
-  45: 'Foggy',
-  48: 'Freezing fog',
-  51: 'Light drizzle',
-  53: 'Drizzle',
-  55: 'Heavy drizzle',
-  56: 'Freezing drizzle',
-  57: 'Heavy freezing drizzle',
-  61: 'Light rain',
-  63: 'Rain',
-  65: 'Heavy rain',
-  66: 'Freezing rain',
-  67: 'Heavy freezing rain',
-  71: 'Light snow',
-  73: 'Snow',
-  75: 'Heavy snow',
-  77: 'Snow grains',
-  80: 'Light showers',
-  81: 'Showers',
-  82: 'Heavy showers',
-  85: 'Light snow showers',
-  86: 'Snow showers',
-  95: 'Thunderstorm',
-  96: 'Thunderstorm with hail',
-  99: 'Severe thunderstorm',
-};
+import type { HourlyForecast } from '../../functions/_shared/types';
 
-export function getWeatherDescription(code: number): string {
-  return weatherDescriptions[code] || 'Unknown';
+/**
+ * Get weather icon emoji for a weather code
+ */
+export function getWeatherIcon(code: number, isDay: boolean): string {
+  // Clear
+  if (code === 0) return isDay ? '☀️' : '🌙';
+  // Mainly clear
+  if (code === 1) return isDay ? '🌤️' : '🌙';
+  // Partly cloudy
+  if (code === 2) return isDay ? '⛅' : '☁️';
+  // Overcast
+  if (code === 3) return '☁️';
+  // Fog
+  if (code === 45 || code === 48) return '🌫️';
+  // Drizzle
+  if (code >= 51 && code <= 57) return '🌧️';
+  // Rain
+  if (code >= 61 && code <= 67) return '🌧️';
+  // Snow
+  if (code >= 71 && code <= 77) return '🌨️';
+  // Showers
+  if (code >= 80 && code <= 82) return '🌦️';
+  // Snow showers
+  if (code >= 85 && code <= 86) return '🌨️';
+  // Thunderstorm
+  if (code >= 95) return '⛈️';
+
+  return '🌡️';
 }
 
 /**
- * Get weather icon/emoji for a weather code
+ * Get weather description for a weather code
  */
-export function getWeatherIcon(code: number, isDay: boolean): string {
-  if (code === 0) return isDay ? '☀️' : '🌙';
-  if (code <= 2) return isDay ? '⛅' : '☁️';
-  if (code === 3) return '☁️';
-  if (code <= 48) return '🌫️';
-  if (code <= 57) return '🌧️';
-  if (code <= 67) return '🌧️';
-  if (code <= 77) return '🌨️';
-  if (code <= 82) return '🌦️';
-  if (code <= 86) return '🌨️';
-  return '⛈️';
+export function getWeatherDescription(code: number): string {
+  const descriptions: Record<number, string> = {
+    0: 'Clear skies',
+    1: 'Mainly clear',
+    2: 'Partly cloudy',
+    3: 'Overcast',
+    45: 'Foggy',
+    48: 'Freezing fog',
+    51: 'Light drizzle',
+    53: 'Drizzle',
+    55: 'Heavy drizzle',
+    56: 'Freezing drizzle',
+    57: 'Heavy freezing drizzle',
+    61: 'Light rain',
+    63: 'Rain',
+    65: 'Heavy rain',
+    66: 'Freezing rain',
+    67: 'Heavy freezing rain',
+    71: 'Light snow',
+    73: 'Snow',
+    75: 'Heavy snow',
+    77: 'Snow grains',
+    80: 'Light showers',
+    81: 'Showers',
+    82: 'Heavy showers',
+    85: 'Light snow showers',
+    86: 'Snow showers',
+    95: 'Thunderstorm',
+    96: 'Thunderstorm with hail',
+    99: 'Severe thunderstorm',
+  };
+  return descriptions[code] || 'Unknown';
 }
 
 /**
@@ -60,10 +75,10 @@ export function formatTemp(temp: number): string {
 }
 
 /**
- * Format time from ISO string to hour (e.g., "3pm")
+ * Format time string to hour display (e.g., "2pm", "10am")
  */
-export function formatHour(isoTime: string): string {
-  const date = new Date(isoTime);
+export function formatHour(time: string): string {
+  const date = new Date(time);
   const hour = date.getHours();
   if (hour === 0) return '12am';
   if (hour === 12) return '12pm';
@@ -72,91 +87,35 @@ export function formatHour(isoTime: string): string {
 }
 
 /**
- * Format date to day name (e.g., "Monday")
+ * Format date to day name (e.g., "Monday", "Tuesday")
  */
-export function formatDayName(isoDate: string): string {
-  const date = new Date(isoDate);
-  return date.toLocaleDateString('en-GB', { weekday: 'long' });
+export function formatDayName(date: string): string {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[new Date(date).getDay()];
 }
 
 /**
- * Format date to short format (e.g., "Mon 16")
+ * Get the weather code for remaining hours of the day
  */
-export function formatShortDate(isoDate: string): string {
-  const date = new Date(isoDate);
-  return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' });
+export function getRemainingWeatherCode(hourly: HourlyForecast[], currentHour: number): number {
+  const remaining = hourly.filter(h => new Date(h.time).getHours() >= currentHour);
+  if (remaining.length === 0) return hourly[0]?.weatherCode || 0;
+
+  // Return the most severe weather code from remaining hours
+  const codes = remaining.map(h => h.weatherCode);
+  // Prioritize rain/storm codes
+  const severeCode = codes.find(c => c >= 95) ||
+                     codes.find(c => c >= 61 && c <= 67) ||
+                     codes.find(c => c >= 51 && c <= 57) ||
+                     codes[0];
+  return severeCode || 0;
 }
 
 /**
- * Get weather code priority for determining most significant weather
- * Higher = more significant/notable (precipitation takes priority)
+ * Get max precipitation probability for remaining hours
  */
-function getWeatherCodePriority(code: number): number {
-  if (code >= 95) return 100; // Thunderstorms - highest priority
-  if (code >= 80) return 80;  // Showers
-  if (code >= 71) return 70;  // Snow
-  if (code >= 61) return 60;  // Rain
-  if (code >= 51) return 50;  // Drizzle
-  if (code >= 45) return 40;  // Fog
-  if (code === 3) return 10;  // Overcast
-  if (code >= 1) return 5;    // Partly cloudy
-  return 0;                   // Clear
-}
-
-/**
- * Filter hourly data to remaining hours from currentHour onwards
- */
-function filterRemainingHours<T extends { time: string }>(
-  hourly: T[],
-  currentHour: number
-): T[] {
-  return hourly.filter(h => {
-    const hour = new Date(h.time).getHours();
-    return hour >= currentHour;
-  });
-}
-
-/**
- * Get representative weather code from remaining hours of today
- * Returns the most significant weather code from hours >= currentHour
- */
-export function getRemainingWeatherCode(
-  hourly: Array<{ time: string; weatherCode: number }>,
-  currentHour: number
-): number {
-  const remainingHours = filterRemainingHours(hourly, currentHour);
-
-  if (remainingHours.length === 0) {
-    return 0; // Default to clear if no hours remaining
-  }
-
-  // Find the most significant weather code
-  let mostSignificant = remainingHours[0].weatherCode;
-  let highestPriority = getWeatherCodePriority(mostSignificant);
-
-  for (const hour of remainingHours) {
-    const priority = getWeatherCodePriority(hour.weatherCode);
-    if (priority > highestPriority) {
-      highestPriority = priority;
-      mostSignificant = hour.weatherCode;
-    }
-  }
-
-  return mostSignificant;
-}
-
-/**
- * Get max precipitation probability from remaining hours of today
- */
-export function getRemainingMaxPrecipitation(
-  hourly: Array<{ time: string; precipitationProbability: number }>,
-  currentHour: number
-): number {
-  const remainingHours = filterRemainingHours(hourly, currentHour);
-
-  if (remainingHours.length === 0) {
-    return 0;
-  }
-
-  return Math.max(...remainingHours.map(h => h.precipitationProbability));
+export function getRemainingMaxPrecipitation(hourly: HourlyForecast[], currentHour: number): number {
+  const remaining = hourly.filter(h => new Date(h.time).getHours() >= currentHour);
+  if (remaining.length === 0) return 0;
+  return Math.max(...remaining.map(h => h.precipitationProbability));
 }

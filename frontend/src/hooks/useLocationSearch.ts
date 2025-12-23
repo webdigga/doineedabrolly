@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { searchLocations } from '../services/locationService';
-import type { SearchResult } from '../types';
+import { useState, useEffect } from 'react';
+import type { SearchResult, SearchResponse } from '../../functions/_shared/types';
 
 interface UseLocationSearchResult {
   query: string;
@@ -10,55 +9,56 @@ interface UseLocationSearchResult {
   error: string | null;
 }
 
-export function useLocationSearch(debounceMs = 200): UseLocationSearchResult {
+export function useLocationSearch(): UseLocationSearchResult {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    // Clear results if query is too short
+    // Don't search for very short queries
     if (query.length < 2) {
       setResults([]);
-      setIsLoading(false);
+      setError(null);
       return;
     }
 
-    // Debounce the search
-    const timeoutId = setTimeout(async () => {
-      // Cancel any in-flight request
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      abortControllerRef.current = new AbortController();
+    const controller = new AbortController();
+    setIsLoading(true);
+    setError(null);
 
-      setIsLoading(true);
-      setError(null);
-
+    const fetchResults = async () => {
       try {
-        const locations = await searchLocations(query);
-        setResults(locations);
-      } catch (err) {
-        if (err instanceof Error && err.name !== 'AbortError') {
-          setError('Failed to search locations');
-          setResults([]);
+        const response = await fetch(
+          `/api/location/search?q=${encodeURIComponent(query)}`,
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error('Search failed');
         }
+
+        const data: SearchResponse = await response.json();
+        setResults(data.results);
+      } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          return; // Ignore aborted requests
+        }
+        setError('Failed to search locations');
+        setResults([]);
       } finally {
         setIsLoading(false);
       }
-    }, debounceMs);
+    };
+
+    // Debounce the search
+    const timeoutId = setTimeout(fetchResults, 200);
 
     return () => {
       clearTimeout(timeoutId);
+      controller.abort();
     };
-  }, [query, debounceMs]);
+  }, [query]);
 
-  return {
-    query,
-    setQuery,
-    results,
-    isLoading,
-    error,
-  };
+  return { query, setQuery, results, isLoading, error };
 }
