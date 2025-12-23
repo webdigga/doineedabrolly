@@ -9,9 +9,11 @@ export function KaboolyBanner() {
       className={styles.banner}
     >
       <img
-        src="/rocket-background.png"
+        src="/rocket-background.avif"
         alt="Kabooly CRM"
         className={styles.logo}
+        width={50}
+        height={48}
         loading="lazy"
       />
       <span className={styles.text}>
