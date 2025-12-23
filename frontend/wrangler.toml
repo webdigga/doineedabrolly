@@ -1,9 +1,0 @@
-name = "doineedabrolly"
-compatibility_date = "2025-01-01"
-
-[vars]
-# Environment variables are defined in .dev.vars for local development
-# and in the Cloudflare dashboard for production
-
-# Pages-specific configuration
-pages_build_output_dir = "dist"

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "doineedabrolly",
+  "name": "doineedabrolly-new",
   "compatibility_date": "2025-01-01",
   "compatibility_flags": ["nodejs_compat"],
   "main": "virtual:photon:cloudflare:server-entry"
