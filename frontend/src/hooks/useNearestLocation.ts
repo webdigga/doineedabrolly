@@ -166,11 +166,28 @@ export function useNearestLocation(): UseNearestLocationResult {
             setIsLoading(false);
           }
         },
-        (positionError) => {
+        async (positionError) => {
           setIsLoading(false);
           if (positionError.code === positionError.PERMISSION_DENIED) {
-            setPermissionState('denied');
-            setCachedPermission('denied');
+            // Check actual permission state - dismissing popup also triggers PERMISSION_DENIED
+            // but the actual state remains 'prompt', not 'denied'
+            let actuallyDenied = true;
+            if (navigator.permissions) {
+              try {
+                const status = await navigator.permissions.query({ name: 'geolocation' });
+                actuallyDenied = status.state === 'denied';
+              } catch {
+                // Permissions API not available, assume denied
+              }
+            }
+
+            if (actuallyDenied) {
+              setPermissionState('denied');
+              setCachedPermission('denied');
+            } else {
+              // User just dismissed the prompt - don't cache, allow retry on next visit
+              setPermissionState('prompt');
+            }
           } else {
             setError('Unable to get your location');
             setPermissionState('unavailable');
