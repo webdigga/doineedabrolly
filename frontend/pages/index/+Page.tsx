@@ -13,11 +13,11 @@ const POPULAR_LOCATIONS = [
   { slug: 'glasgow', countySlug: 'glasgow-city', name: 'Glasgow' },
   { slug: 'liverpool', countySlug: 'merseyside', name: 'Liverpool' },
   { slug: 'edinburgh', countySlug: 'city-of-edinburgh', name: 'Edinburgh' },
-  { slug: 'bristol', countySlug: 'bristol', name: 'Bristol' },
+  { slug: 'bristol', countySlug: 'city-of-bristol', name: 'Bristol' },
   { slug: 'sheffield', countySlug: 'south-yorkshire', name: 'Sheffield' },
   { slug: 'newcastle-upon-tyne', countySlug: 'tyne-and-wear', name: 'Newcastle' },
   { slug: 'nottingham', countySlug: 'nottinghamshire', name: 'Nottingham' },
-  { slug: 'cardiff', countySlug: 'cardiff', name: 'Cardiff' },
+  { slug: 'cardiff', countySlug: 'caerdydd-cardiff', name: 'Cardiff' },
 ];
 
 export function Page() {

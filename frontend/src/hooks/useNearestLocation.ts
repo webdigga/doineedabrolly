@@ -47,8 +47,8 @@ function getCachedPermission(): PermissionState | null {
   if (typeof window === 'undefined') return null;
   try {
     const cached = localStorage.getItem(PERMISSION_CACHE_KEY);
-    if (cached === 'denied') {
-      return 'denied';
+    if (cached === 'denied' || cached === 'granted') {
+      return cached as PermissionState;
     }
   } catch {
     // localStorage unavailable
@@ -59,8 +59,8 @@ function getCachedPermission(): PermissionState | null {
 function setCachedPermission(state: PermissionState): void {
   if (typeof window === 'undefined') return;
   try {
-    if (state === 'denied') {
-      localStorage.setItem(PERMISSION_CACHE_KEY, 'denied');
+    if (state === 'denied' || state === 'granted') {
+      localStorage.setItem(PERMISSION_CACHE_KEY, state);
     } else {
       localStorage.removeItem(PERMISSION_CACHE_KEY);
     }
@@ -98,6 +98,12 @@ export function useNearestLocation(): UseNearestLocationResult {
       return;
     }
 
+    // If permission was previously granted, set state immediately
+    // This ensures loading UI shows while GPS acquires position
+    if (cachedPermission === 'granted') {
+      setPermissionState('granted');
+    }
+
     // Check if we have a cached location from this session
     const cachedLocation = getCachedLocation();
     if (cachedLocation) {
@@ -107,53 +113,78 @@ export function useNearestLocation(): UseNearestLocationResult {
       return;
     }
 
-    // Request geolocation
+    // Use Permissions API to check current state (if available)
+    // This helps detect granted permission before GPS position arrives
     const controller = new AbortController();
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        setPermissionState('granted');
-        setCachedPermission('granted');
-
+    const checkPermissionAndGetLocation = async () => {
+      // Try to detect permission state early using Permissions API
+      if (navigator.permissions) {
         try {
-          const response = await fetch(
-            `/api/location/nearest?lat=${latitude}&lon=${longitude}`,
-            { signal: controller.signal }
-          );
-
-          if (!response.ok) {
-            throw new Error('Failed to find nearest location');
-          }
-
-          const location: NearestLocation = await response.json();
-          setNearestLocation(location);
-          setCachedLocation(location);
-        } catch (err) {
-          if (err instanceof Error && err.name === 'AbortError') {
+          const permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+          if (permissionStatus.state === 'granted') {
+            setPermissionState('granted');
+            setCachedPermission('granted');
+          } else if (permissionStatus.state === 'denied') {
+            setPermissionState('denied');
+            setCachedPermission('denied');
+            setIsLoading(false);
             return;
           }
-          setError('Failed to find nearest location');
-        } finally {
-          setIsLoading(false);
+          // 'prompt' state - continue to request position
+        } catch {
+          // Permissions API not fully supported, continue anyway
         }
-      },
-      (positionError) => {
-        setIsLoading(false);
-        if (positionError.code === positionError.PERMISSION_DENIED) {
-          setPermissionState('denied');
-          setCachedPermission('denied');
-        } else {
-          setError('Unable to get your location');
-          setPermissionState('unavailable');
-        }
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 600000, // Cache for 10 minutes
       }
-    );
+
+      // Request geolocation
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setPermissionState('granted');
+          setCachedPermission('granted');
+
+          try {
+            const response = await fetch(
+              `/api/location/nearest?lat=${latitude}&lon=${longitude}`,
+              { signal: controller.signal }
+            );
+
+            if (!response.ok) {
+              throw new Error('Failed to find nearest location');
+            }
+
+            const location: NearestLocation = await response.json();
+            setNearestLocation(location);
+            setCachedLocation(location);
+          } catch (err) {
+            if (err instanceof Error && err.name === 'AbortError') {
+              return;
+            }
+            setError('Failed to find nearest location');
+          } finally {
+            setIsLoading(false);
+          }
+        },
+        (positionError) => {
+          setIsLoading(false);
+          if (positionError.code === positionError.PERMISSION_DENIED) {
+            setPermissionState('denied');
+            setCachedPermission('denied');
+          } else {
+            setError('Unable to get your location');
+            setPermissionState('unavailable');
+          }
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 600000, // Cache for 10 minutes
+        }
+      );
+    };
+
+    checkPermissionAndGetLocation();
 
     return () => {
       controller.abort();
