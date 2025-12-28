@@ -13,6 +13,7 @@ import { KaboolyBanner } from '../../../../src/components/KaboolyBanner/KaboolyB
 import { SideBanners } from '../../../../src/components/SideBanners/SideBanners';
 import { Footer } from '../../../../src/components/Footer/Footer';
 import { LocationStructuredData, WeatherArticleStructuredData } from '../../../../src/components/SEO/StructuredData';
+import { FavouriteButton } from '../../../../src/components/FavouriteButton/FavouriteButton';
 import styles from '../../../../src/pages/WeatherPage/WeatherPage.module.css';
 
 export function Page() {
@@ -58,7 +59,17 @@ export function Page() {
           slug={location.slug}
         />
         <div className={styles.locationHeader}>
-          <h1 className={styles.locationName}>{location.name} Weather</h1>
+          <h1 className={styles.locationName}>
+            {location.name} Weather
+            <FavouriteButton
+              location={{
+                slug: location.slug,
+                countySlug: location.countySlug,
+                name: location.name,
+                county: location.county,
+              }}
+            />
+          </h1>
         </div>
 
         <WeatherSummary summary={weather.summary} />

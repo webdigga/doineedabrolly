@@ -20,6 +20,7 @@ export function useLocationSearch(): UseLocationSearchResult {
     if (query.length < 2) {
       setResults([]);
       setError(null);
+      setIsLoading(false);
       return;
     }
 

@@ -1,8 +1,8 @@
 import { SearchBox } from '../../src/components/SearchBox/SearchBox';
-import { LocationLinks } from '../../src/components/LocationLinks/LocationLinks';
 import { KaboolyBanner } from '../../src/components/KaboolyBanner/KaboolyBanner';
 import { Footer } from '../../src/components/Footer/Footer';
 import { WebsiteStructuredData, OrganizationStructuredData, HowToStructuredData } from '../../src/components/SEO/StructuredData';
+import { PersonalisedLocations } from '../../src/components/PersonalisedLocations/PersonalisedLocations';
 import styles from '../../src/pages/HomePage/HomePage.module.css';
 
 const POPULAR_LOCATIONS = [
@@ -41,12 +41,8 @@ export function Page() {
           <SearchBox autoFocus placeholder="Enter your town or city..." />
         </div>
 
-        <p className={styles.hint}>
-          Try searching for your town to get today's forecast
-        </p>
-
-        <div className={styles.popularSection}>
-          <LocationLinks title="Popular locations" locations={POPULAR_LOCATIONS} centered />
+        <div className={styles.locationsSection}>
+          <PersonalisedLocations fallbackLocations={POPULAR_LOCATIONS} />
         </div>
       </main>
 

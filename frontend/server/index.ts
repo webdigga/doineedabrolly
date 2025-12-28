@@ -73,6 +73,52 @@ function startServer() {
     });
   });
 
+  // Find nearest location to coordinates (must be before :slug route)
+  app.get('/api/location/nearest', (c) => {
+    const latStr = c.req.query('lat');
+    const lonStr = c.req.query('lon');
+
+    if (!latStr || !lonStr) {
+      return c.json({ error: 'lat and lon query parameters are required' }, 400);
+    }
+
+    const lat = parseFloat(latStr);
+    const lon = parseFloat(lonStr);
+
+    if (isNaN(lat) || isNaN(lon)) {
+      return c.json({ error: 'lat and lon must be valid numbers' }, 400);
+    }
+
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+      return c.json({ error: 'Invalid coordinates' }, 400);
+    }
+
+    // Find nearest location using squared distance (faster than Haversine, accurate enough for nearby points)
+    let nearest = ukLocations[0];
+    let minDistSq = Infinity;
+
+    for (const loc of ukLocations) {
+      const dLat = loc.lat - lat;
+      const dLon = loc.lon - lon;
+      const distSq = dLat * dLat + dLon * dLon;
+      if (distSq < minDistSq) {
+        minDistSq = distSq;
+        nearest = loc;
+      }
+    }
+
+    return c.json({
+      slug: nearest.slug,
+      countySlug: nearest.countySlug,
+      name: nearest.name,
+      county: nearest.county,
+      lat: nearest.lat,
+      lon: nearest.lon,
+    }, 200, {
+      'Cache-Control': `public, max-age=${STATIC_CACHE_TTL}, s-maxage=${STATIC_CACHE_TTL}`,
+    });
+  });
+
   // Get location by slug
   app.get('/api/location/:slug', (c) => {
     const slug = c.req.param('slug');
